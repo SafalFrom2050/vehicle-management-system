@@ -1,0 +1,45 @@
+package views.listitems;
+
+import models.Staff;
+import models.User;
+import utility.Utility;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class ListItemUser extends JPanel {
+
+    private User user;
+
+
+    private JLabel lblUsername = new JLabel(),
+            lblName = new JLabel(),
+            lblType = new JLabel();
+
+    public ListItemUser(User user){
+        this.user = user;
+        createView();
+    }
+
+    public JPanel createView(){
+
+        lblUsername.setText(user.getUsername());
+        lblName.setText("TODO");
+        lblType.setText("TODO");
+
+        Font fontListItem = Utility.FONT_LIST_ITEM;
+
+        lblUsername.setFont(fontListItem);
+        lblName.setFont(fontListItem);
+        lblType.setFont(fontListItem);
+
+        setLayout(new GridLayout(1,10));
+        add(lblUsername);
+        add(lblName);
+        add(lblType);
+        this.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        return this;
+    }
+
+
+}
