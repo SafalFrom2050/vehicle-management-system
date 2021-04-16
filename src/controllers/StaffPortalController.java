@@ -9,8 +9,7 @@ import views.FrameStaffPortal;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class StaffPortalController implements ActionListener, ListSelectionListener {
 
@@ -40,8 +39,16 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
         frameStaffPortal.setLocationRelativeTo(null);
         frameStaffPortal.setVisible(true);
 
+        loadDefaultList();
+
         setEventListeners();
     }
+
+    private void loadDefaultList(){
+        loadVehicles();
+        setSelectedMainMenuItem(BUTTON_ACTION_VEHICLES);
+    }
+
      private void setEventListeners(){
         frameStaffPortal.getBtnMenuVehicles().addActionListener(this);
         frameStaffPortal.getBtnMenuCustomers().addActionListener(this);
@@ -49,7 +56,9 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
         frameStaffPortal.getPanelListView().getListView().addListSelectionListener(this);
 
         frameStaffPortal.getPanelListView().getBtnRemove().addActionListener(this);
-         frameStaffPortal.getPanelListView().getBtnAdd().addActionListener(this);
+        frameStaffPortal.getPanelListView().getBtnAddCar().addActionListener(this);
+        frameStaffPortal.getPanelListView().getBtnAddMiniBus().addActionListener(this);
+        frameStaffPortal.getPanelListView().getBtnAddLorry().addActionListener(this);
      }
 
      public void setSelectedMainMenuItem(String buttonAction){
@@ -71,20 +80,6 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
      public void loadVehicles(){
         Vehicle vehicle = new Vehicle();
 
-         // TODO: Remove
-//        Car car = Car.getDummyList().get(0);
-//        MiniBus miniBus = MiniBus.getDummyList().get(0);
-//        Lorry lorry = Lorry.getDummyList().get(0);
-//
-//        try {
-//            car.create();
-//            miniBus.create();
-//            lorry.create();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-
-
         ListModel<Vehicle> vehicleListModel = new ListModel<Vehicle>(vehicle.getVehiclesList());
 
         frameStaffPortal.getPanelListView().setListModel(vehicleListModel);
@@ -99,6 +94,53 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
         frameStaffPortal.getPanelListView().setListModel(staffListModel);
         frameStaffPortal.getPanelListView().setListRenderer(new ListRenderer<Staff>(Utility.HEADINGS_USERS));
      }
+
+     public void openAddCarForm(){
+         AddVehicleController addVehicleController = new AddVehicleController(new FrameAddVehicle(), Car.getDummyList().get(0));
+
+         addVehicleController.addWindowListener(new WindowAdapter() {
+             @Override
+             public void windowClosing(WindowEvent e)
+             {
+                 System.out.println("Closed");
+
+                 if(e != null) e.getWindow().dispose();
+                 loadVehicles();
+             }
+         });
+     }
+
+    public void openAddMiniBusForm(){
+        AddVehicleController addVehicleController = new AddVehicleController(new FrameAddVehicle(), MiniBus.getDummyList().get(0));
+
+        addVehicleController.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                System.out.println("Closed");
+
+                if(e != null) e.getWindow().dispose();
+                loadVehicles();
+            }
+        });
+    }
+
+    public void openAddLorryForm(){
+        AddVehicleController addVehicleController = new AddVehicleController(new FrameAddVehicle(), Lorry.getDummyList().get(0));
+
+        addVehicleController.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                System.out.println("Closed");
+
+                if(e != null) e.getWindow().dispose();
+                loadVehicles();
+            }
+        });
+    }
+
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -116,9 +158,15 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
             setSelectedMainMenuItem(BUTTON_ACTION_HIRE_REQUESTS);
         }else if(source == frameStaffPortal.getPanelListView().getBtnRemove()){
             selectedVehicle.delete();
+            loadVehicles();
+
         }
-        else if(source == frameStaffPortal.getPanelListView().getBtnAdd()){
-            new FrameAddVehicle();
+        else if(source == frameStaffPortal.getPanelListView().getBtnAddCar()){
+            openAddCarForm();
+        }else if(source == frameStaffPortal.getPanelListView().getBtnAddMiniBus()){
+            openAddMiniBusForm();
+        }else if(source == frameStaffPortal.getPanelListView().getBtnAddLorry()){
+            openAddLorryForm();
         }
     }
 
@@ -135,6 +183,5 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
             if(vehicle.getType() == Vehicle.TYPE_MINI_BUS) frameStaffPortal.getPanelDescriptionBox().setMiniBusModelData((MiniBus) obj);
             if(vehicle.getType() == Vehicle.TYPE_LORRY) frameStaffPortal.getPanelDescriptionBox().setLorryModelData((Lorry) obj);
         }
-
     }
 }

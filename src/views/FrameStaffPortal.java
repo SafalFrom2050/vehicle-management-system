@@ -33,7 +33,7 @@ public class FrameStaffPortal extends JFrame {
         panel.add(getMenuPanel(), BorderLayout.NORTH);
         panel.add(label, BorderLayout.SOUTH);
 
-        panel.add(loadCarsListPanel(), BorderLayout.WEST);
+        panel.add(loadListPanel(), BorderLayout.WEST);
         panel.add(loadDetailsPanel(), BorderLayout.EAST);
 
         return panel;
@@ -64,21 +64,18 @@ public class FrameStaffPortal extends JFrame {
         JPanel parent = new JPanel(new GridBagLayout());
         parent.setPreferredSize(new Dimension(340, 360));
 
-        Car car = new Car(1, 180, 4, "Toyota", "2020", false, "petrol", 4);
-        panelDescriptionBox = new PanelDescriptionBox(car, 360, 300);
+        panelDescriptionBox = new PanelDescriptionBox(360, 300);
         panelDescriptionBox.insertEditBtn();
         parent.add(panelDescriptionBox);
         return parent;
     }
 
 
-    public JPanel loadCarsListPanel(){
+    public JPanel loadListPanel(){
         JPanel parent = new JPanel(new GridBagLayout());
         parent.setPreferredSize(new Dimension(this.getWidth()/2+40, 400));
 
-        ListModel<Car> listModelCar = new ListModel(Car.getDummyList());
-
-        panelListView = new PanelListView(listModelCar, this.getWidth()/2, 360);
+        panelListView = new PanelListView( this.getWidth()/2, 360);
         panelListView.insertAddBtn();
         panelListView.insertRemoveBtn();
 

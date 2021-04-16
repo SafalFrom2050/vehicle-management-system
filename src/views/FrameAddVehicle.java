@@ -75,4 +75,148 @@ public class FrameAddVehicle extends JFrame {
         return tempPanel;
     }
 
+
+    public JPanel getPanel() {
+        return panel;
+    }
+
+    public void setPanel(JPanel panel) {
+        this.panel = panel;
+    }
+
+    public JLabel getLblRegNumber() {
+        return lblRegNumber;
+    }
+
+    public void setLblRegNumber(JLabel lblRegNumber) {
+        this.lblRegNumber = lblRegNumber;
+    }
+
+    public JLabel getLblTopSpeed() {
+        return lblTopSpeed;
+    }
+
+    public void setLblTopSpeed(JLabel lblTopSpeed) {
+        this.lblTopSpeed = lblTopSpeed;
+    }
+
+    public JLabel getLblDailyHireRate() {
+        return lblDailyHireRate;
+    }
+
+    public void setLblDailyHireRate(JLabel lblDailyHireRate) {
+        this.lblDailyHireRate = lblDailyHireRate;
+    }
+
+    public JLabel getLblMake() {
+        return lblMake;
+    }
+
+    public void setLblMake(JLabel lblMake) {
+        this.lblMake = lblMake;
+    }
+
+    public JLabel getLblModel() {
+        return lblModel;
+    }
+
+    public void setLblModel(JLabel lblModel) {
+        this.lblModel = lblModel;
+    }
+
+    public JLabel getLblIsHired() {
+        return lblIsHired;
+    }
+
+    public void setLblIsHired(JLabel lblIsHired) {
+        this.lblIsHired = lblIsHired;
+    }
+
+    public JLabel getLblSpecial1() {
+        return lblSpecial1;
+    }
+
+    public void setLblSpecial1(JLabel lblSpecial1) {
+        this.lblSpecial1 = lblSpecial1;
+    }
+
+    public JLabel getLblSpecial2() {
+        return lblSpecial2;
+    }
+
+    public void setLblSpecial2(JLabel lblSpecial2) {
+        this.lblSpecial2 = lblSpecial2;
+    }
+
+    public JTextField getTxtRegNumber() {
+        return txtRegNumber;
+    }
+
+    public void setTxtRegNumber(JTextField txtRegNumber) {
+        this.txtRegNumber = txtRegNumber;
+    }
+
+    public JTextField getTxtTopSpeed() {
+        return txtTopSpeed;
+    }
+
+    public void setTxtTopSpeed(JTextField txtTopSpeed) {
+        this.txtTopSpeed = txtTopSpeed;
+    }
+
+    public JTextField getTxtDailyHireRate() {
+        return txtDailyHireRate;
+    }
+
+    public void setTxtDailyHireRate(JTextField txtDailyHireRate) {
+        this.txtDailyHireRate = txtDailyHireRate;
+    }
+
+    public JTextField getTxtMake() {
+        return txtMake;
+    }
+
+    public void setTxtMake(JTextField txtMake) {
+        this.txtMake = txtMake;
+    }
+
+    public JTextField getTxtModel() {
+        return txtModel;
+    }
+
+    public void setTxtModel(JTextField txtModel) {
+        this.txtModel = txtModel;
+    }
+
+    public JTextField getTxtIsHired() {
+        return txtIsHired;
+    }
+
+    public void setTxtIsHired(JTextField txtIsHired) {
+        this.txtIsHired = txtIsHired;
+    }
+
+    public JTextField getTxtSpecial1() {
+        return txtSpecial1;
+    }
+
+    public void setTxtSpecial1(JTextField txtSpecial1) {
+        this.txtSpecial1 = txtSpecial1;
+    }
+
+    public JTextField getTxtSpecial2() {
+        return txtSpecial2;
+    }
+
+    public void setTxtSpecial2(JTextField txtSpecial2) {
+        this.txtSpecial2 = txtSpecial2;
+    }
+
+    public JButton getBtnConfirm() {
+        return btnConfirm;
+    }
+
+    public void setBtnConfirm(JButton btnConfirm) {
+        this.btnConfirm = btnConfirm;
+    }
 }

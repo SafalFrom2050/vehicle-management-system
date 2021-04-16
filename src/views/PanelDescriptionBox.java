@@ -3,6 +3,7 @@ package views;
 import models.Car;
 import models.Lorry;
 import models.MiniBus;
+import models.Vehicle;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -36,9 +37,18 @@ public class PanelDescriptionBox extends JPanel {
 
     private int height, width;
 
+    private Vehicle vehicle;
     private Car carModel;
     private MiniBus miniBusModel;
     private Lorry lorryModel;
+
+
+    public PanelDescriptionBox(int height, int width){
+        this.height = height;
+        this.width = width;
+
+        createDetailPanel();
+    }
 
     public PanelDescriptionBox(Car carModel, int height, int width){
         this.height = height;
@@ -87,26 +97,27 @@ public class PanelDescriptionBox extends JPanel {
 
     public void setCommonData(){
         lblMake.setText("Make: ");
-        txtMake.setText(carModel.getMake());
+        txtMake.setText(vehicle.getMake());
 
         lblRegNumber.setText("Reg No: ");
-        txtRegNumber.setText(Integer.toString(carModel.getRegistrationNumber()));
+        txtRegNumber.setText(Integer.toString(vehicle.getRegistrationNumber()));
 
         lblTopSpeed.setText("Top Speed: ");
-        txtTopSpeed.setText(Integer.toString(carModel.getTopSpeed()));
+        txtTopSpeed.setText(Integer.toString(vehicle.getTopSpeed()));
 
         lblModel.setText("Model: ");
-        txtModel.setText(carModel.getModel());
+        txtModel.setText(vehicle.getModel());
 
         lblIsHired.setText("Is Hired: ");
-        txtIsHired.setText(Boolean.toString(carModel.isHired()));
+        txtIsHired.setText(Boolean.toString(vehicle.isHired()));
 
         lblDailyHireRate.setText("Daily Hire Rate: ");
-        txtDailyHireRate.setText(Integer.toString(carModel.getDailyHireRate()));
+        txtDailyHireRate.setText(Integer.toString(vehicle.getDailyHireRate()));
     }
 
     public void setCarModelData(Car carModel){
         this.carModel = carModel;
+        this.vehicle = (Vehicle) carModel;
         setCommonData();
 
         lblSpecial1.setText("Fuel Type: ");
@@ -118,6 +129,8 @@ public class PanelDescriptionBox extends JPanel {
 
     public void setMiniBusModelData(MiniBus miniBusModel){
         this.miniBusModel = miniBusModel;
+        this.vehicle = (Vehicle) miniBusModel;
+
         setCommonData();
 
         lblSpecial1.setText("Seating Capacity: ");
@@ -129,6 +142,8 @@ public class PanelDescriptionBox extends JPanel {
 
     public void setLorryModelData(Lorry lorryModel){
         this.lorryModel = lorryModel;
+        this.vehicle = (Vehicle) lorryModel;
+
         setCommonData();
 
         lblSpecial1.setText("Loading Capacity: ");

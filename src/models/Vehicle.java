@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Vehicle implements Serializable {
     private static final long serialVersionUID = 6098736424535717790L;
-    public static final int TYPE_CAR = 1001, TYPE_MINI_BUS = 1002, TYPE_LORRY = 1003;
+    public static final int TYPE_VEHICLE = 1000, TYPE_CAR = 1001, TYPE_MINI_BUS = 1002, TYPE_LORRY = 1003;
 
     private int registrationNumber, topSpeed, dailyHireRate;
     private String make, model;
