@@ -33,8 +33,8 @@ public class FrameStaffPortal extends JFrame {
         panel.add(getMenuPanel(), BorderLayout.NORTH);
         panel.add(label, BorderLayout.SOUTH);
 
-        panel.add(loadListPanel(), BorderLayout.WEST);
-        panel.add(loadDetailsPanel(), BorderLayout.EAST);
+        panel.add(createListPanel(), BorderLayout.WEST);
+        panel.add(createDetailsPanel(), BorderLayout.EAST);
 
         return panel;
     }
@@ -60,7 +60,7 @@ public class FrameStaffPortal extends JFrame {
         return panelMenu;
     }
 
-    public JPanel loadDetailsPanel(){
+    public JPanel createDetailsPanel(){
         JPanel parent = new JPanel(new GridBagLayout());
         parent.setPreferredSize(new Dimension(340, 360));
 
@@ -71,12 +71,11 @@ public class FrameStaffPortal extends JFrame {
     }
 
 
-    public JPanel loadListPanel(){
+    public JPanel createListPanel(){
         JPanel parent = new JPanel(new GridBagLayout());
         parent.setPreferredSize(new Dimension(this.getWidth()/2+40, 400));
 
         panelListView = new PanelListView( this.getWidth()/2, 360);
-        panelListView.insertAddBtn();
         panelListView.insertRemoveBtn();
 
         parent.add(panelListView);

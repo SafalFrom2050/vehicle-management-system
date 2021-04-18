@@ -1,9 +1,8 @@
 package views;
 
-import models.Car;
-import models.Lorry;
-import models.MiniBus;
-import models.Vehicle;
+import models.*;
+import views.miscellaneous.LabelDescriptionBox;
+import views.miscellaneous.TextFieldDescriptionBox;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -15,25 +14,48 @@ public class PanelDescriptionBox extends JPanel {
 
     private JLabel lblHeading = new JLabel();
 
-    private JLabel lblRegNumber = new JLabel(),
-            lblTopSpeed = new JLabel(),
-            lblDailyHireRate = new JLabel(),
-            lblMake = new JLabel(),
-            lblModel = new JLabel(),
-            lblIsHired = new JLabel(),
-            lblSpecial1 = new JLabel(),
-            lblSpecial2 = new JLabel();
+    // Car Views
+    private JLabel lblRegNumber = new LabelDescriptionBox("Reg No.: "),
+            lblTopSpeed = new LabelDescriptionBox("Top Speed: "),
+            lblDailyHireRate = new LabelDescriptionBox("Daily Hire Rate: "),
+            lblMake = new LabelDescriptionBox("Make: "),
+            lblModel = new LabelDescriptionBox("Model: "),
+            lblIsHired = new LabelDescriptionBox("Is Hired: "),
+            lblSpecial1 = new LabelDescriptionBox(),
+            lblSpecial2 = new LabelDescriptionBox(),
 
-    private JTextField txtRegNumber = new JTextField(),
-            txtTopSpeed = new JTextField(),
-            txtDailyHireRate = new JTextField(),
-            txtMake = new JTextField(),
-            txtModel = new JTextField(),
-            txtIsHired = new JTextField(),
-            txtSpecial1 = new JTextField(),
-            txtSpecial2 = new JTextField();
+    // User Views
+            lblStaffID = new LabelDescriptionBox("Staff ID: "),
+            lblCustomerID = new LabelDescriptionBox("Customer ID: "),
+            lblUsername = new LabelDescriptionBox("Username: "),
+            lblPassword = new LabelDescriptionBox("Password: "),
+            lblName = new LabelDescriptionBox("Name: "),
+            lblAddress = new LabelDescriptionBox("Address: "),
+            lblPhoneNumber = new LabelDescriptionBox("Phone Number: "),
+            lblEmail = new LabelDescriptionBox("Email: ");
 
-    private JButton btnEdit;
+
+    // Car Views
+    private JTextField txtRegNumber = new TextFieldDescriptionBox(),
+            txtTopSpeed = new TextFieldDescriptionBox(),
+            txtDailyHireRate = new TextFieldDescriptionBox(),
+            txtMake = new TextFieldDescriptionBox(),
+            txtModel = new TextFieldDescriptionBox(),
+            txtIsHired = new TextFieldDescriptionBox(),
+            txtSpecial1 = new TextFieldDescriptionBox(),
+            txtSpecial2 = new TextFieldDescriptionBox(),
+
+    // User Views
+            txtStaffID = new TextFieldDescriptionBox(),
+            txtCustomerID = new TextFieldDescriptionBox(),
+            txtUsername = new TextFieldDescriptionBox(),
+            txtPassword = new TextFieldDescriptionBox(),
+            txtName = new TextFieldDescriptionBox(),
+            txtAddress = new TextFieldDescriptionBox(),
+            txtPhoneNumber = new TextFieldDescriptionBox(),
+            txtEmail = new TextFieldDescriptionBox();
+
+    private JButton btnEdit = new JButton("Save Edit");
 
     private int height, width;
 
@@ -42,12 +64,18 @@ public class PanelDescriptionBox extends JPanel {
     private MiniBus miniBusModel;
     private Lorry lorryModel;
 
+    private Staff staffModel;
+    private Customer customerModel;
+
+    private int type = Vehicle.TYPE_VEHICLE;
+
 
     public PanelDescriptionBox(int height, int width){
         this.height = height;
         this.width = width;
 
         createDetailPanel();
+        setHidden();
     }
 
     public PanelDescriptionBox(Car carModel, int height, int width){
@@ -77,10 +105,26 @@ public class PanelDescriptionBox extends JPanel {
         setLorryModelData(lorryModel);
     }
 
+    public PanelDescriptionBox(Staff staffModel, int height, int width){
+        this.height = height;
+        this.width = width;
+        this.staffModel = staffModel;
 
-    public JPanel createDetailPanel(){
+        createDetailPanel();
+        // TODO: setLorryModelData(lorryModel);
+    }
+
+    public PanelDescriptionBox(Customer customerModel, int height, int width){
+        this.height = height;
+        this.width = width;
+        this.customerModel = customerModel;
+
+        createDetailPanel();
+        // TODO: setLorryModelData(lorryModel);
+    }
+
+    private JPanel createDetailPanel(){
         this.setLayout(new GridBagLayout());
-
 
         setPreferredSize(new Dimension(width, height));
 
@@ -95,30 +139,86 @@ public class PanelDescriptionBox extends JPanel {
         return this;
     }
 
-    public void setCommonData(){
-        lblMake.setText("Make: ");
+    private void setCustomerViewsVisibility(boolean v){
+        lblCustomerID.setVisible(v);
+        txtCustomerID.setVisible(v);
+
+        lblAddress.setVisible(v);
+        txtAddress.setVisible(v);
+
+        lblPhoneNumber.setVisible(v);
+        txtPhoneNumber.setVisible(v);
+
+        lblEmail.setVisible(v);
+        txtEmail.setVisible(v);
+    }
+
+    public void setStaffModelData(Staff staffModel){
+        // Show Staff User Views Only
+        setVehicleViewsVisibility(false);
+        setUserViewsVisibility(true);
+        btnEdit.setVisible(true);
+
+        setCustomerViewsVisibility(false);
+
+
+        this.staffModel = staffModel;
+        this.type = User.TYPE_STAFF;
+
+        txtStaffID.setText(Integer.toString(staffModel.getStaffID()));
+        txtUsername.setText(staffModel.getUsername());
+
+        // Do not show password
+        txtPassword.setText("");
+    }
+
+    public void setCustomerModelData(Customer customerModel){
+        // Show Customer User Views Only
+        setVehicleViewsVisibility(false);
+        setUserViewsVisibility(true);
+        setCustomerViewsVisibility(true);
+        btnEdit.setVisible(true);
+        lblStaffID.setVisible(false);
+        txtStaffID.setVisible(false);
+
+        this.customerModel = customerModel;
+        this.type = User.TYPE_CUSTOMER;
+
+        txtCustomerID.setText(Integer.toString(customerModel.getIdentificationNumber()));
+        txtUsername.setText(customerModel.getUsername());
+        txtName.setText(customerModel.getName());
+        txtPhoneNumber.setText(customerModel.getPhoneNumber());
+        txtAddress.setText(customerModel.getAddress());
+        txtEmail.setText(customerModel.getEmail());
+
+        // Do not show password
+        txtPassword.setText("");
+    }
+
+    private void setCommonVehicleData(){
+        // Show Vehicle Views Only
+        setVehicleViewsVisibility(true);
+        setUserViewsVisibility(false);
+        btnEdit.setVisible(true);
+
         txtMake.setText(vehicle.getMake());
 
-        lblRegNumber.setText("Reg No: ");
         txtRegNumber.setText(Integer.toString(vehicle.getRegistrationNumber()));
 
-        lblTopSpeed.setText("Top Speed: ");
         txtTopSpeed.setText(Integer.toString(vehicle.getTopSpeed()));
 
-        lblModel.setText("Model: ");
         txtModel.setText(vehicle.getModel());
 
-        lblIsHired.setText("Is Hired: ");
         txtIsHired.setText(Boolean.toString(vehicle.isHired()));
 
-        lblDailyHireRate.setText("Daily Hire Rate: ");
         txtDailyHireRate.setText(Integer.toString(vehicle.getDailyHireRate()));
     }
 
     public void setCarModelData(Car carModel){
         this.carModel = carModel;
         this.vehicle = (Vehicle) carModel;
-        setCommonData();
+        this.type = Vehicle.TYPE_CAR;
+        setCommonVehicleData();
 
         lblSpecial1.setText("Fuel Type: ");
         txtSpecial1.setText(carModel.getFuelType());
@@ -130,8 +230,9 @@ public class PanelDescriptionBox extends JPanel {
     public void setMiniBusModelData(MiniBus miniBusModel){
         this.miniBusModel = miniBusModel;
         this.vehicle = (Vehicle) miniBusModel;
+        this.type = Vehicle.TYPE_MINI_BUS;
 
-        setCommonData();
+        setCommonVehicleData();
 
         lblSpecial1.setText("Seating Capacity: ");
         txtSpecial1.setText(Integer.toString(miniBusModel.getSeatingCapacity()));
@@ -143,8 +244,9 @@ public class PanelDescriptionBox extends JPanel {
     public void setLorryModelData(Lorry lorryModel){
         this.lorryModel = lorryModel;
         this.vehicle = (Vehicle) lorryModel;
+        this.type = Vehicle.TYPE_LORRY;
 
-        setCommonData();
+        setCommonVehicleData();
 
         lblSpecial1.setText("Loading Capacity: ");
         txtSpecial1.setText(Integer.toString(lorryModel.getLoadingCapacity()));
@@ -155,7 +257,6 @@ public class PanelDescriptionBox extends JPanel {
 
 
     public void setViews(){
-        setFonts();
         setChildPadding();
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -172,121 +273,92 @@ public class PanelDescriptionBox extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(lblRegNumber, gbc);
+        add(lblStaffID, gbc);
+        add(lblCustomerID, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(lblMake, gbc);
+        add(lblUsername, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
         add(lblModel, gbc);
+        add(lblPassword, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
         add(lblTopSpeed, gbc);
+        add(lblName, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 5;
         add(lblIsHired, gbc);
+        add(lblAddress, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 6;
         add(lblDailyHireRate, gbc);
+        add(lblPhoneNumber, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 7;
         add(lblSpecial1, gbc);
+        add(lblEmail, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 8;
         add(lblSpecial2, gbc);
 
-       // Buttons
+
+       // Text Fields
 
         gbc.gridx = 1;
         gbc.gridy = 1;
         add(txtRegNumber, gbc);
+        add(txtCustomerID, gbc);
+        add(txtStaffID, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 2;
         add(txtMake, gbc);
+        add(txtUsername, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 3;
         add(txtModel, gbc);
+        add(txtPassword, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 4;
         add(txtTopSpeed, gbc);
+        add(txtName, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 5;
         add(txtIsHired, gbc);
+        add(txtAddress, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 6;
         add(txtDailyHireRate, gbc);
+        add(txtPhoneNumber, gbc);
 
 
         gbc.gridx = 1;
         gbc.gridy = 7;
         add(txtSpecial1, gbc);
+        add(txtEmail, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 8;
         add(txtSpecial2, gbc);
     }
 
-    private void setFonts(){
-        fontBig = new Font(null, Font.PLAIN, 16);
-        fontMedium = new Font(null, Font.PLAIN, 14);
-
-        lblHeading.setFont(fontHeading);
-
-        lblMake.setFont(fontMedium);
-        lblModel.setFont(fontMedium);
-        lblTopSpeed.setFont(fontMedium);
-        lblRegNumber.setFont(fontMedium);
-        lblDailyHireRate.setFont(fontMedium);
-        lblIsHired.setFont(fontMedium);
-        lblSpecial1.setFont(fontMedium);
-        lblSpecial2.setFont(fontMedium);
-
-        txtMake.setFont(fontMedium);
-        txtModel.setFont(fontMedium);
-        txtTopSpeed.setFont(fontMedium);
-        txtRegNumber.setFont(fontMedium);
-        txtDailyHireRate.setFont(fontMedium);
-        txtIsHired.setFont(fontMedium);
-        txtSpecial1.setFont(fontMedium);
-        txtSpecial2.setFont(fontMedium);
-    }
-
     private void setChildPadding(){
-
         txtRegNumber.setColumns(4);
-        txtRegNumber.setHorizontalAlignment(SwingConstants.CENTER);
-
-        txtMake.setColumns(10);
-        txtMake.setHorizontalAlignment(SwingConstants.CENTER);
-
-        txtModel.setColumns(10);
-        txtModel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        txtDailyHireRate.setColumns(10);
-        txtDailyHireRate.setHorizontalAlignment(SwingConstants.CENTER);
-
-        txtSpecial1.setColumns(10);
-        txtSpecial1.setHorizontalAlignment(SwingConstants.CENTER);
-
-        txtSpecial2.setColumns(10);
-        txtSpecial2.setHorizontalAlignment(SwingConstants.CENTER);
-
-        txtIsHired.setColumns(10);
-        txtIsHired.setHorizontalAlignment(SwingConstants.CENTER);
-
-        txtTopSpeed.setColumns(10);
-        txtTopSpeed.setHorizontalAlignment(SwingConstants.CENTER);
+        txtStaffID.setColumns(4);
+        txtCustomerID.setColumns(4);
     }
 
     public void insertEditBtn(){
@@ -298,11 +370,55 @@ public class PanelDescriptionBox extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 100;
 
-
-        btnEdit = new JButton("Save Edit");
         this.add(btnEdit, gbc);
     }
 
+    private void setVehicleViewsVisibility(boolean v){
+        lblMake.setVisible(v);
+        lblModel.setVisible(v);
+        lblRegNumber.setVisible(v);
+        lblDailyHireRate.setVisible(v);
+        lblIsHired.setVisible(v);
+        lblTopSpeed.setVisible(v);
+        lblSpecial1.setVisible(v);
+        lblSpecial2.setVisible(v);
+
+        txtMake.setVisible(v);
+        txtModel.setVisible(v);
+        txtRegNumber.setVisible(v);
+        txtDailyHireRate.setVisible(v);
+        txtIsHired.setVisible(v);
+        txtTopSpeed.setVisible(v);
+        txtSpecial1.setVisible(v);
+        txtSpecial2.setVisible(v);
+    }
+
+    private void setUserViewsVisibility(boolean v){
+        lblStaffID.setVisible(v);
+        lblCustomerID.setVisible(v);
+        lblUsername.setVisible(v);
+        lblPassword.setVisible(v);
+        lblName.setVisible(v);
+        lblPhoneNumber.setVisible(v);
+        lblAddress.setVisible(v);
+        lblEmail.setVisible(v);
+
+        txtStaffID.setVisible(v);
+        txtCustomerID.setVisible(v);
+        txtUsername.setVisible(v);
+        txtPassword.setVisible(v);
+        txtName.setVisible(v);
+        txtPhoneNumber.setVisible(v);
+        txtAddress.setVisible(v);
+        txtEmail.setVisible(v);
+    }
+
+    public void setHidden(){
+
+        setVehicleViewsVisibility(false);
+        setUserViewsVisibility(false);
+        btnEdit.setVisible(false);
+    }
 
     public Font getFontHeading() {
         return fontHeading;
@@ -498,6 +614,14 @@ public class PanelDescriptionBox extends JPanel {
         this.width = width;
     }
 
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
     public Car getCarModel() {
         return carModel;
     }
@@ -520,5 +644,13 @@ public class PanelDescriptionBox extends JPanel {
 
     public void setLorryModel(Lorry lorryModel) {
         this.lorryModel = lorryModel;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

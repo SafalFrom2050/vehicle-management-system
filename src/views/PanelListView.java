@@ -1,7 +1,7 @@
 package views;
 
 import controllers.ListRenderer;
-import models.Car;
+import models.*;
 import models.ListModel;
 import utility.Utility;
 
@@ -14,8 +14,17 @@ public class PanelListView extends JPanel {
     private ListModel listModel;
     private int height, width;
 
-    private JButton btnAddCar, btnAddMiniBus, btnAddLorry, btnRemove;
+    private JButton btnAddCar = new JButton("Add Car"),
+            btnAddMiniBus = new JButton("Add Minibus"),
+            btnAddLorry = new JButton("Add Lorry"),
+            btnRemove;
+
+    private JButton btnAddStaff = new JButton("Add Staff"),
+            btnAddCustomer = new JButton("Add Customer");
+
     private JList listView = new JList();
+
+    private int listType = -1;
 
     public PanelListView(int width, int height){
         this.height = height;
@@ -67,14 +76,30 @@ public class PanelListView extends JPanel {
         return this;
     }
 
-    public void insertAddBtn(){
-        btnAddCar = new JButton("Add Car");
-        btnAddMiniBus = new JButton("Add Minibus");
-        btnAddLorry = new JButton("Add Lorry");
+    private void insertVehicleAddBtn(){
+        removeActionButtons();
 
         this.add(btnAddCar);
         this.add(btnAddMiniBus);
         this.add(btnAddLorry);
+    }
+
+    private void insertUserAddBtn(){
+        removeActionButtons();
+
+        this.add(btnAddCustomer);
+        this.add(btnAddStaff);
+    }
+
+    private void removeActionButtons(){
+        this.remove(btnAddStaff);
+        this.remove(btnAddCustomer);
+        this.remove(btnAddCar);
+        this.remove(btnAddMiniBus);
+        this.remove(btnAddLorry);
+
+        revalidate();
+        repaint();
     }
 
     public void insertRemoveBtn(){
@@ -122,6 +147,22 @@ public class PanelListView extends JPanel {
         this.listView = listView;
     }
 
+    public JButton getBtnAddStaff() {
+        return btnAddStaff;
+    }
+
+    public void setBtnAddStaff(JButton btnAddStaff) {
+        this.btnAddStaff = btnAddStaff;
+    }
+
+    public JButton getBtnAddCustomer() {
+        return btnAddCustomer;
+    }
+
+    public void setBtnAddCustomer(JButton btnAddCustomer) {
+        this.btnAddCustomer = btnAddCustomer;
+    }
+
     public ListModel getListModel() {
         return listModel;
     }
@@ -134,6 +175,30 @@ public class PanelListView extends JPanel {
 
     public void setListRenderer(ListRenderer listRenderer){
         listView.setCellRenderer(listRenderer);
+    }
+
+    public void setListType(int listType){
+
+        if(listType == Vehicle.TYPE_CAR ||
+                listType == Vehicle.TYPE_MINI_BUS  ||
+                listType == Vehicle.TYPE_LORRY  ||
+                listType == Vehicle.TYPE_VEHICLE){
+
+            this.listType = Vehicle.TYPE_VEHICLE;
+            setListRenderer(new ListRenderer<Vehicle>(Utility.HEADINGS_VEHICLES));
+            insertVehicleAddBtn();
+        }else if(listType == User.TYPE_USER ||
+                listType == User.TYPE_CUSTOMER ||
+                listType == User.TYPE_STAFF){
+
+            this.listType = User.TYPE_USER;
+            setListRenderer(new ListRenderer<Staff>(Utility.HEADINGS_USERS));
+            insertUserAddBtn();
+        }
+    }
+
+    public int getListType(){
+        return listType;
     }
 
     public void setHeight(int height) {

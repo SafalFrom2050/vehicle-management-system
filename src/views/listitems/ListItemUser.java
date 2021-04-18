@@ -24,8 +24,12 @@ public class ListItemUser extends JPanel {
     public JPanel createView(){
 
         lblUsername.setText(user.getUsername());
-        lblName.setText("TODO");
-        lblType.setText("TODO");
+        lblName.setText(user.getName());
+        if(user.getUserType() == User.TYPE_STAFF){
+            lblType.setText("Staff");
+        }else if(user.getUserType() == User.TYPE_CUSTOMER){
+            lblType.setText("Customer");
+        }
 
         Font fontListItem = Utility.FONT_LIST_ITEM;
 

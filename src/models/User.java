@@ -4,20 +4,33 @@ import java.io.*;
 
 public class User implements Serializable {
 
-    public static final int TYPE_STAFF = 2001, TYPE_CUSTOMER = 2002;
+    public static final int TYPE_USER = 2000, TYPE_STAFF = 2001, TYPE_CUSTOMER = 2002;
 
     private static final long serialVersionUID = 7079889566089012613L;
 
-    private String username, password;
+    private String name, username, password;
 
     private int userType;
 
-    public User(String username, String password){
+    public User(){
+
+    }
+
+    public User(String name, String username, String password){
+        this.name = name;
         this.username = username;
         this.password = password;
     }
     public User(String username){
         this.username = username;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUsername() {

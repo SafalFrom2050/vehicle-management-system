@@ -16,11 +16,30 @@ public class Customer extends User implements Serializable {
 
     private int identificationNumber;
 
+    public Customer(){
+
+    }
+
     public Customer(String username){
         super(username);
+        setUserType(TYPE_CUSTOMER);
     }
-    public Customer(String username, String password){
-        super(username, password);
+
+    public Customer(String name, String username, String password){
+        super(name, username, password);
+        setUserType(TYPE_CUSTOMER);
+    }
+
+    public Customer(int identificationNumber, String name, String username, String password, String phoneNumber,
+                    String address, String email){
+        super(name, username, password);
+
+        this.identificationNumber = identificationNumber;
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        setUserType(TYPE_CUSTOMER);
     }
 
 
@@ -65,7 +84,7 @@ public class Customer extends User implements Serializable {
     }
 
 
-    public void createUser() throws FileNotFoundException {
+    public void create() throws FileNotFoundException {
         FileHandler<Customer> fileHandler = new FileHandler<Customer>();
 
         fileHandler.writeObject(this, FILE_NAME, true);

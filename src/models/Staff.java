@@ -14,8 +14,13 @@ public class Staff extends User implements Serializable {
 
     private int staffID;
 
-    public Staff(int staffID, String username, String password){
-        super(username, password);
+    public Staff(){
+    }
+
+    public Staff(int staffID, String name, String username, String password){
+        super(name, username, password);
+        this.staffID = staffID;
+        setUserType(TYPE_STAFF);
     }
 
     public int getStaffID() {
@@ -29,17 +34,16 @@ public class Staff extends User implements Serializable {
     public static List<Staff> getDummyList(){
         List<Staff> staffList = new ArrayList<>();
 
-        staffList.add(new Staff(1, "Safal", "password"));
-        staffList.add(new Staff(2, "Mathew", "password"));
-        staffList.add(new Staff(3, "Harry", "password"));
-        staffList.add(new Staff(4, "Yoda", "password"));
-        staffList.add(new Staff(5, "Batman", "password"));
+        staffList.add(new Staff(1, "Safal", "safal", "password"));
+        staffList.add(new Staff(1, "Test", "Test 1", "password"));
+        staffList.add(new Staff(1, "Test", "Test 2", "password"));
+        staffList.add(new Staff(1, "Test", "Test 3", "password"));
 
         return staffList;
 
     }
 
-    public void createUser() throws FileNotFoundException {
+    public void create() throws FileNotFoundException {
         FileHandler<Staff> fileHandler = new FileHandler<Staff>();
 
         fileHandler.writeObject(this, FILE_NAME, true);
@@ -65,7 +69,7 @@ public class Staff extends User implements Serializable {
 
     public User getUserWithUsername(String username){
         FileHandler<Staff> fileHandler = new FileHandler<Staff>();
-        Staff user = fileHandler.findFirstMatchingObject(FILE_NAME, new Staff(-1, username, "dummy"));
+        Staff user = fileHandler.findFirstMatchingObject(FILE_NAME, new Staff(-1,"dummyName", username,"dummyPassword"));
 
         System.out.println(user.getUsername());
 

@@ -5,6 +5,7 @@ import models.Lorry;
 import models.MiniBus;
 import models.Vehicle;
 import views.FrameAddVehicle;
+import views.miscellaneous.Messages;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -78,7 +79,7 @@ public class AddVehicleController implements ActionListener {
         frameAddVehicle.getBtnConfirm().addActionListener(this);
     }
 
-    public void addToDB(){
+    public void addToDB() throws FileNotFoundException{
 
         if(!validateForm()){
             showErrorMessage("Please input all fields", frameAddVehicle);
@@ -100,11 +101,8 @@ public class AddVehicleController implements ActionListener {
             Car vehicle = new Car(registrationNumber, topSpeed, dailyHireRate, make, model, false, fuelType, numberOfDoors);
             vehicle.setType(Vehicle.TYPE_CAR);
 
-            try {
-                vehicle.create();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            vehicle.create();
+
         }else if(type == Vehicle.TYPE_MINI_BUS){
 
             int seatingCapacity = Integer.parseInt(frameAddVehicle.getTxtSpecial1().getText());
@@ -112,22 +110,16 @@ public class AddVehicleController implements ActionListener {
             MiniBus vehicle = new MiniBus(registrationNumber, topSpeed, dailyHireRate, make, model, false, seatingCapacity);
             vehicle.setType(Vehicle.TYPE_MINI_BUS);
 
-            try {
-                vehicle.create();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            vehicle.create();
+
         }else if(type == Vehicle.TYPE_LORRY){
             int loadingCapacity = Integer.parseInt(frameAddVehicle.getTxtSpecial1().getText());
 
             Lorry vehicle = new Lorry(registrationNumber, topSpeed, dailyHireRate, make, model, false, loadingCapacity);
             vehicle.setType(Vehicle.TYPE_LORRY);
 
-            try {
-                vehicle.create();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            vehicle.create();
+
         }
 
         showMessage("Added Successfully", frameAddVehicle);
@@ -156,8 +148,11 @@ public class AddVehicleController implements ActionListener {
         Object source = e.getSource();
 
         if(source == frameAddVehicle.getBtnConfirm()){
-            System.out.println("Clicked!");
-            addToDB();
+            try {
+                addToDB();
+            } catch (FileNotFoundException ex) {
+                Messages.showErrorMessage("Couldn't create new vehicle!", frameAddVehicle);
+            }
         }
     }
 }

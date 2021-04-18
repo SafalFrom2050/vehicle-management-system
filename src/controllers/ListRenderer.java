@@ -40,8 +40,6 @@ public class ListRenderer<T> extends JPanel implements ListCellRenderer {
         }else if(model instanceof User){
             ListItemUser listItemUser = new ListItemUser((User) model);
             this.add(listItemUser);
-        }else if(model instanceof Staff){
-            System.out.println("Staff found!");
         }
 
         this.getComponent(0).setPreferredSize(new Dimension(list.getWidth(), 35));
