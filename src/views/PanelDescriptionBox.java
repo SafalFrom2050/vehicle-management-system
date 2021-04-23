@@ -2,6 +2,7 @@ package views;
 
 import models.*;
 import views.miscellaneous.LabelDescriptionBox;
+import views.miscellaneous.PasswordFieldDescriptionBox;
 import views.miscellaneous.TextFieldDescriptionBox;
 
 import javax.swing.*;
@@ -32,7 +33,12 @@ public class PanelDescriptionBox extends JPanel {
             lblName = new LabelDescriptionBox("Name: "),
             lblAddress = new LabelDescriptionBox("Address: "),
             lblPhoneNumber = new LabelDescriptionBox("Phone Number: "),
-            lblEmail = new LabelDescriptionBox("Email: ");
+            lblEmail = new LabelDescriptionBox("Email: "),
+
+    // Hire Vehicles View
+            lblHireStatus = new LabelDescriptionBox("Status: "),
+            lblHireAdditionalInfo = new LabelDescriptionBox("Additional Info: "),
+            lblHireRequestDate = new LabelDescriptionBox("Request Date: ");
 
 
     // Car Views
@@ -49,13 +55,20 @@ public class PanelDescriptionBox extends JPanel {
             txtStaffID = new TextFieldDescriptionBox(),
             txtCustomerID = new TextFieldDescriptionBox(),
             txtUsername = new TextFieldDescriptionBox(),
-            txtPassword = new TextFieldDescriptionBox(),
+            txtPassword = new PasswordFieldDescriptionBox("Unchanged"),
             txtName = new TextFieldDescriptionBox(),
             txtAddress = new TextFieldDescriptionBox(),
             txtPhoneNumber = new TextFieldDescriptionBox(),
-            txtEmail = new TextFieldDescriptionBox();
+            txtEmail = new TextFieldDescriptionBox(),
 
-    private JButton btnEdit = new JButton("Save Edit");
+    // Hire Vehicles View
+            txtHireStatus = new TextFieldDescriptionBox(),
+            txtHireAdditionalInfo = new TextFieldDescriptionBox(),
+            txtHireRequestDate = new TextFieldDescriptionBox();
+
+
+    private JButton btnEdit = new JButton("Save Edit"),
+            btnHireVehicle = new JButton("Hire Vehicle");
 
     private int height, width;
 
@@ -67,63 +80,88 @@ public class PanelDescriptionBox extends JPanel {
     private Staff staffModel;
     private Customer customerModel;
 
+    private HiredVehicle hiredVehicleModel;
+
     private int type = Vehicle.TYPE_VEHICLE;
 
+    private int accessLevelType = User.TYPE_CUSTOMER;
 
-    public PanelDescriptionBox(int height, int width){
+
+    public PanelDescriptionBox(int height, int width, int accessLevelType){
         this.height = height;
         this.width = width;
+        this.accessLevelType = accessLevelType;
 
         createDetailPanel();
         setHidden();
     }
 
-    public PanelDescriptionBox(Car carModel, int height, int width){
+    public PanelDescriptionBox(Car carModel, int height, int width, int accessLevelType){
         this.height = height;
         this.width = width;
         this.carModel = carModel;
+        this.type = Vehicle.TYPE_CAR;
+        this.accessLevelType = accessLevelType;
 
         createDetailPanel();
         setCarModelData(carModel);
     }
 
-    public PanelDescriptionBox(MiniBus miniBusModel, int height, int width){
+    public PanelDescriptionBox(MiniBus miniBusModel, int height, int width, int accessLevelType){
         this.height = height;
         this.width = width;
         this.miniBusModel = miniBusModel;
+        this.type = Vehicle.TYPE_MINI_BUS;
+        this.accessLevelType = accessLevelType;
 
         createDetailPanel();
         setMiniBusModelData(miniBusModel);
     }
 
-    public PanelDescriptionBox(Lorry lorryModel, int height, int width){
+    public PanelDescriptionBox(Lorry lorryModel, int height, int width, int accessLevelType){
         this.height = height;
         this.width = width;
         this.lorryModel = lorryModel;
+        this.type = Vehicle.TYPE_LORRY;
 
         createDetailPanel();
         setLorryModelData(lorryModel);
     }
 
-    public PanelDescriptionBox(Staff staffModel, int height, int width){
+    public PanelDescriptionBox(Staff staffModel, int height, int width, int accessLevelType){
         this.height = height;
         this.width = width;
         this.staffModel = staffModel;
+        this.type = User.TYPE_STAFF;
+        this.accessLevelType = accessLevelType;
 
         createDetailPanel();
-        // TODO: setLorryModelData(lorryModel);
+        setStaffModelData(staffModel);
     }
 
-    public PanelDescriptionBox(Customer customerModel, int height, int width){
+    public PanelDescriptionBox(Customer customerModel, int height, int width, int accessLevelType){
         this.height = height;
         this.width = width;
         this.customerModel = customerModel;
+        this.type = User.TYPE_CUSTOMER;
+        this.accessLevelType = accessLevelType;
 
         createDetailPanel();
-        // TODO: setLorryModelData(lorryModel);
+        setCustomerModelData(customerModel);
     }
 
-    private JPanel createDetailPanel(){
+    public PanelDescriptionBox(HiredVehicle hiredVehicleModel, int height, int width, int accessLevelType){
+        this.height = height;
+        this.width = width;
+        this.hiredVehicleModel = hiredVehicleModel;
+        this.type = HiredVehicle.TYPE_HIRED_VEHICLE;
+        this.accessLevelType = accessLevelType;
+
+        createDetailPanel();
+        setHireVehicleModelData(hiredVehicleModel);
+    }
+
+    private void createDetailPanel(){
         this.setLayout(new GridBagLayout());
 
         setPreferredSize(new Dimension(width, height));
@@ -136,31 +174,13 @@ public class PanelDescriptionBox extends JPanel {
                 BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
         setViews();
-        return this;
-    }
-
-    private void setCustomerViewsVisibility(boolean v){
-        lblCustomerID.setVisible(v);
-        txtCustomerID.setVisible(v);
-
-        lblAddress.setVisible(v);
-        txtAddress.setVisible(v);
-
-        lblPhoneNumber.setVisible(v);
-        txtPhoneNumber.setVisible(v);
-
-        lblEmail.setVisible(v);
-        txtEmail.setVisible(v);
     }
 
     public void setStaffModelData(Staff staffModel){
         // Show Staff User Views Only
-        setVehicleViewsVisibility(false);
-        setUserViewsVisibility(true);
-        btnEdit.setVisible(true);
-
-        setCustomerViewsVisibility(false);
-
+        setHidden();
+        setStaffViewsVisibility(true);
+        insertEditBtn();
 
         this.staffModel = staffModel;
         this.type = User.TYPE_STAFF;
@@ -168,18 +188,15 @@ public class PanelDescriptionBox extends JPanel {
         txtStaffID.setText(Integer.toString(staffModel.getStaffID()));
         txtUsername.setText(staffModel.getUsername());
 
-        // Do not show password
-        txtPassword.setText("");
+        // Password is set, but is hidden due to JPasswordType
+        txtPassword.setText(staffModel.getPassword());
     }
 
     public void setCustomerModelData(Customer customerModel){
         // Show Customer User Views Only
-        setVehicleViewsVisibility(false);
-        setUserViewsVisibility(true);
+        setHidden();
         setCustomerViewsVisibility(true);
-        btnEdit.setVisible(true);
-        lblStaffID.setVisible(false);
-        txtStaffID.setVisible(false);
+        insertEditBtn();
 
         this.customerModel = customerModel;
         this.type = User.TYPE_CUSTOMER;
@@ -191,15 +208,17 @@ public class PanelDescriptionBox extends JPanel {
         txtAddress.setText(customerModel.getAddress());
         txtEmail.setText(customerModel.getEmail());
 
-        // Do not show password
-        txtPassword.setText("");
+        // Password is set, but is hidden due to JPasswordType
+        txtPassword.setText(customerModel.getPassword());
     }
 
     private void setCommonVehicleData(){
         // Show Vehicle Views Only
+        setHidden();
         setVehicleViewsVisibility(true);
-        setUserViewsVisibility(false);
-        btnEdit.setVisible(true);
+
+        if(accessLevelType == User.TYPE_STAFF) insertEditBtn();
+        if(accessLevelType == User.TYPE_CUSTOMER) insertHireVehicleBtn();
 
         txtMake.setText(vehicle.getMake());
 
@@ -255,8 +274,30 @@ public class PanelDescriptionBox extends JPanel {
         txtSpecial2.setText("---");
     }
 
+    public void setHireVehicleModelData(HiredVehicle hireVehicleModel){
+        this.hiredVehicleModel = hireVehicleModel;
+        this.type = HiredVehicle.TYPE_HIRED_VEHICLE;
 
-    public void setViews(){
+        if(hireVehicleModel == null) return;
+
+        setHireVehicleViewsVisibility(true);
+
+        Vehicle vehicle = Vehicle.getVehicleWithRegNo(hireVehicleModel.getVehicleRegNo());
+        Customer customer = Customer.getUserWithUsername(hireVehicleModel.getUsername());
+
+        txtRegNumber.setText(Integer.toString(vehicle.getRegistrationNumber()));
+        txtCustomerID.setText(Integer.toString(customer.getIdentificationNumber()));
+        txtUsername.setText(customer.getUsername());
+        txtMake.setText(vehicle.getMake());
+        txtModel.setText(vehicle.getModel());
+
+        txtHireStatus.setText(hireVehicleModel.getStringStatus());
+        txtHireAdditionalInfo.setText(hireVehicleModel.getAdditionalInfo());
+        txtHireRequestDate.setText(hireVehicleModel.getRequestDate().toString());
+    }
+
+
+    private void setViews(){
         setChildPadding();
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -269,90 +310,159 @@ public class PanelDescriptionBox extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         //add(lblHeading, gbc);
+        add(lblRegNumber, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        add(lblRegNumber, gbc);
         add(lblStaffID, gbc);
-        add(lblCustomerID, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        add(lblMake, gbc);
-        add(lblUsername, gbc);
+        add(lblCustomerID, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        add(lblModel, gbc);
-        add(lblPassword, gbc);
+        add(lblMake, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        add(lblTopSpeed, gbc);
-        add(lblName, gbc);
+        add(lblUsername, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 5;
-        add(lblIsHired, gbc);
-        add(lblAddress, gbc);
+        add(lblModel, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 6;
-        add(lblDailyHireRate, gbc);
-        add(lblPhoneNumber, gbc);
+        add(lblPassword, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 7;
-        add(lblSpecial1, gbc);
-        add(lblEmail, gbc);
+        add(lblTopSpeed, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 8;
+        add(lblName, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        add(lblIsHired, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 10;
+        add(lblAddress, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 11;
+        add(lblDailyHireRate, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 12;
+        add(lblPhoneNumber, gbc);
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 13;
+        add(lblSpecial1, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 14;
+        add(lblEmail, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 15;
         add(lblSpecial2, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 16;
+        add(lblHireAdditionalInfo, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 17;
+        add(lblHireRequestDate, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 18;
+        add(lblHireStatus, gbc);
 
 
        // Text Fields
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        add(txtRegNumber, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;
-        add(txtRegNumber, gbc);
-        add(txtCustomerID, gbc);
         add(txtStaffID, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 2;
-        add(txtMake, gbc);
-        add(txtUsername, gbc);
+        add(txtCustomerID, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 3;
-        add(txtModel, gbc);
-        add(txtPassword, gbc);
+        add(txtMake, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 4;
-        add(txtTopSpeed, gbc);
-        add(txtName, gbc);
+        add(txtUsername, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 5;
-        add(txtIsHired, gbc);
-        add(txtAddress, gbc);
+        add(txtModel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 6;
+        add(txtPassword, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 7;
+        add(txtTopSpeed, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 8;
+        add(txtName, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 9;
+        add(txtIsHired, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 10;
+        add(txtAddress, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 11;
         add(txtDailyHireRate, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 12;
         add(txtPhoneNumber, gbc);
 
 
         gbc.gridx = 1;
-        gbc.gridy = 7;
+        gbc.gridy = 13;
         add(txtSpecial1, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 14;
         add(txtEmail, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 8;
+        gbc.gridy = 15;
         add(txtSpecial2, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 16;
+        add(txtHireAdditionalInfo, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 17;
+        add(txtHireRequestDate, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 18;
+        add(txtHireStatus, gbc);
     }
 
     private void setChildPadding(){
@@ -361,7 +471,19 @@ public class PanelDescriptionBox extends JPanel {
         txtCustomerID.setColumns(4);
     }
 
-    public void insertEditBtn(){
+    private void insertEditBtn(){
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.insets = new Insets(20, 2, 0, 2);
+
+        // Add in the last position
+        gbc.gridx = 1;
+        gbc.gridy = 101;
+
+        this.add(btnEdit, gbc);
+    }
+
+    private void insertHireVehicleBtn(){
         GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.insets = new Insets(20, 2, 0, 2);
@@ -370,7 +492,7 @@ public class PanelDescriptionBox extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 100;
 
-        this.add(btnEdit, gbc);
+        this.add(btnHireVehicle, gbc);
     }
 
     private void setVehicleViewsVisibility(boolean v){
@@ -391,10 +513,13 @@ public class PanelDescriptionBox extends JPanel {
         txtTopSpeed.setVisible(v);
         txtSpecial1.setVisible(v);
         txtSpecial2.setVisible(v);
+
+        if(accessLevelType == User.TYPE_STAFF) btnEdit.setVisible(true);
+        btnHireVehicle.setVisible(true);
     }
 
-    private void setUserViewsVisibility(boolean v){
-        lblStaffID.setVisible(v);
+    private void setCustomerViewsVisibility(boolean v){
+        //lblStaffID.setVisible(v);
         lblCustomerID.setVisible(v);
         lblUsername.setVisible(v);
         lblPassword.setVisible(v);
@@ -403,7 +528,7 @@ public class PanelDescriptionBox extends JPanel {
         lblAddress.setVisible(v);
         lblEmail.setVisible(v);
 
-        txtStaffID.setVisible(v);
+        //txtStaffID.setVisible(v);
         txtCustomerID.setVisible(v);
         txtUsername.setVisible(v);
         txtPassword.setVisible(v);
@@ -411,13 +536,49 @@ public class PanelDescriptionBox extends JPanel {
         txtPhoneNumber.setVisible(v);
         txtAddress.setVisible(v);
         txtEmail.setVisible(v);
+
+        btnEdit.setVisible(true);
+    }
+
+    private void setStaffViewsVisibility(boolean v){
+        lblStaffID.setVisible(v);
+        lblUsername.setVisible(v);
+        lblPassword.setVisible(v);
+        lblName.setVisible(v);
+
+
+        txtStaffID.setVisible(v);
+        txtUsername.setVisible(v);
+        txtPassword.setVisible(v);
+        txtName.setVisible(v);
+
+        btnEdit.setVisible(true);
+    }
+
+    private void setHireVehicleViewsVisibility(boolean v){
+        lblRegNumber.setVisible(v);
+        lblCustomerID.setVisible(v);
+        lblUsername.setVisible(v);
+        lblMake.setVisible(v);
+        lblModel.setVisible(v);
+        lblHireAdditionalInfo.setVisible(v);
+        lblHireRequestDate.setVisible(v);
+        lblHireStatus.setVisible(v);
+
+        txtRegNumber.setVisible(v);
+        txtCustomerID.setVisible(v);
+        txtUsername.setVisible(v);
+        txtMake.setVisible(v);
+        txtModel.setVisible(v);
+        txtHireAdditionalInfo.setVisible(v);
+        txtHireRequestDate.setVisible(v);
+        txtHireStatus.setVisible(v);
     }
 
     public void setHidden(){
-
-        setVehicleViewsVisibility(false);
-        setUserViewsVisibility(false);
-        btnEdit.setVisible(false);
+        for (Component c: this.getComponents()) {
+            c.setVisible(false);
+        }
     }
 
     public Font getFontHeading() {
@@ -652,5 +813,221 @@ public class PanelDescriptionBox extends JPanel {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public JLabel getLblStaffID() {
+        return lblStaffID;
+    }
+
+    public void setLblStaffID(JLabel lblStaffID) {
+        this.lblStaffID = lblStaffID;
+    }
+
+    public JLabel getLblCustomerID() {
+        return lblCustomerID;
+    }
+
+    public void setLblCustomerID(JLabel lblCustomerID) {
+        this.lblCustomerID = lblCustomerID;
+    }
+
+    public JLabel getLblUsername() {
+        return lblUsername;
+    }
+
+    public void setLblUsername(JLabel lblUsername) {
+        this.lblUsername = lblUsername;
+    }
+
+    public JLabel getLblPassword() {
+        return lblPassword;
+    }
+
+    public void setLblPassword(JLabel lblPassword) {
+        this.lblPassword = lblPassword;
+    }
+
+    public JLabel getLblName() {
+        return lblName;
+    }
+
+    public void setLblName(JLabel lblName) {
+        this.lblName = lblName;
+    }
+
+    public JLabel getLblAddress() {
+        return lblAddress;
+    }
+
+    public void setLblAddress(JLabel lblAddress) {
+        this.lblAddress = lblAddress;
+    }
+
+    public JLabel getLblPhoneNumber() {
+        return lblPhoneNumber;
+    }
+
+    public void setLblPhoneNumber(JLabel lblPhoneNumber) {
+        this.lblPhoneNumber = lblPhoneNumber;
+    }
+
+    public JLabel getLblEmail() {
+        return lblEmail;
+    }
+
+    public void setLblEmail(JLabel lblEmail) {
+        this.lblEmail = lblEmail;
+    }
+
+    public JLabel getLblHireStatus() {
+        return lblHireStatus;
+    }
+
+    public void setLblHireStatus(JLabel lblHireStatus) {
+        this.lblHireStatus = lblHireStatus;
+    }
+
+    public JLabel getLblHireAdditionalInfo() {
+        return lblHireAdditionalInfo;
+    }
+
+    public void setLblHireAdditionalInfo(JLabel lblHireAdditionalInfo) {
+        this.lblHireAdditionalInfo = lblHireAdditionalInfo;
+    }
+
+    public JLabel getLblHireRequestDate() {
+        return lblHireRequestDate;
+    }
+
+    public void setLblHireRequestDate(JLabel lblHireRequestDate) {
+        this.lblHireRequestDate = lblHireRequestDate;
+    }
+
+    public JTextField getTxtStaffID() {
+        return txtStaffID;
+    }
+
+    public void setTxtStaffID(JTextField txtStaffID) {
+        this.txtStaffID = txtStaffID;
+    }
+
+    public JTextField getTxtCustomerID() {
+        return txtCustomerID;
+    }
+
+    public void setTxtCustomerID(JTextField txtCustomerID) {
+        this.txtCustomerID = txtCustomerID;
+    }
+
+    public JTextField getTxtUsername() {
+        return txtUsername;
+    }
+
+    public void setTxtUsername(JTextField txtUsername) {
+        this.txtUsername = txtUsername;
+    }
+
+    public JTextField getTxtPassword() {
+        return txtPassword;
+    }
+
+    public void setTxtPassword(JTextField txtPassword) {
+        this.txtPassword = txtPassword;
+    }
+
+    public JTextField getTxtName() {
+        return txtName;
+    }
+
+    public void setTxtName(JTextField txtName) {
+        this.txtName = txtName;
+    }
+
+    public JTextField getTxtAddress() {
+        return txtAddress;
+    }
+
+    public void setTxtAddress(JTextField txtAddress) {
+        this.txtAddress = txtAddress;
+    }
+
+    public JTextField getTxtPhoneNumber() {
+        return txtPhoneNumber;
+    }
+
+    public void setTxtPhoneNumber(JTextField txtPhoneNumber) {
+        this.txtPhoneNumber = txtPhoneNumber;
+    }
+
+    public JTextField getTxtEmail() {
+        return txtEmail;
+    }
+
+    public void setTxtEmail(JTextField txtEmail) {
+        this.txtEmail = txtEmail;
+    }
+
+    public JTextField getTxtHireStatus() {
+        return txtHireStatus;
+    }
+
+    public void setTxtHireStatus(JTextField txtHireStatus) {
+        this.txtHireStatus = txtHireStatus;
+    }
+
+    public JTextField getTxtHireAdditionalInfo() {
+        return txtHireAdditionalInfo;
+    }
+
+    public void setTxtHireAdditionalInfo(JTextField txtHireAdditionalInfo) {
+        this.txtHireAdditionalInfo = txtHireAdditionalInfo;
+    }
+
+    public JTextField getTxtHireRequestDate() {
+        return txtHireRequestDate;
+    }
+
+    public void setTxtHireRequestDate(JTextField txtHireRequestDate) {
+        this.txtHireRequestDate = txtHireRequestDate;
+    }
+
+    public Staff getStaffModel() {
+        return staffModel;
+    }
+
+    public void setStaffModel(Staff staffModel) {
+        this.staffModel = staffModel;
+    }
+
+    public Customer getCustomerModel() {
+        return customerModel;
+    }
+
+    public void setCustomerModel(Customer customerModel) {
+        this.customerModel = customerModel;
+    }
+
+    public HiredVehicle getHiredVehicleModel() {
+        return hiredVehicleModel;
+    }
+
+    public void setHiredVehicleModel(HiredVehicle hiredVehicleModel) {
+        this.hiredVehicleModel = hiredVehicleModel;
+    }
+
+    public JButton getBtnHireVehicle() {
+        return btnHireVehicle;
+    }
+
+    public void setBtnHireVehicle(JButton btnHireVehicle) {
+        this.btnHireVehicle = btnHireVehicle;
+    }
+
+    public int getAccessLevelType() {
+        return accessLevelType;
+    }
+
+    public void setAccessLevelType(int accessLevelType) {
+        this.accessLevelType = accessLevelType;
     }
 }

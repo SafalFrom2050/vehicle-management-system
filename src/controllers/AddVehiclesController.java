@@ -4,6 +4,7 @@ import models.Car;
 import models.Lorry;
 import models.MiniBus;
 import models.Vehicle;
+import utility.Validator;
 import views.FrameAddVehicle;
 import views.miscellaneous.Messages;
 
@@ -15,7 +16,7 @@ import java.io.FileNotFoundException;
 import static views.miscellaneous.Messages.showErrorMessage;
 import static views.miscellaneous.Messages.showMessage;
 
-public class AddVehicleController implements ActionListener {
+public class AddVehiclesController implements ActionListener {
 
     private WindowListener windowListener;
     private FrameAddVehicle frameAddVehicle;
@@ -26,7 +27,7 @@ public class AddVehicleController implements ActionListener {
 
     private int type;
 
-    public AddVehicleController(FrameAddVehicle frameAddVehicle, Vehicle vehicle){
+    public AddVehiclesController(FrameAddVehicle frameAddVehicle, Vehicle vehicle){
         this.frameAddVehicle = frameAddVehicle;
         this.vehicle = vehicle;
         this.type = Vehicle.TYPE_VEHICLE;
@@ -34,7 +35,7 @@ public class AddVehicleController implements ActionListener {
         addEventListeners();
     }
 
-    public AddVehicleController(FrameAddVehicle frameAddVehicle, Car car){
+    public AddVehiclesController(FrameAddVehicle frameAddVehicle, Car car){
         this.frameAddVehicle = frameAddVehicle;
         this.car = car;
         this.type = Vehicle.TYPE_CAR;
@@ -45,7 +46,7 @@ public class AddVehicleController implements ActionListener {
         addEventListeners();
     }
 
-    public AddVehicleController(FrameAddVehicle frameAddVehicle, Lorry lorry){
+    public AddVehiclesController(FrameAddVehicle frameAddVehicle, Lorry lorry){
         this.frameAddVehicle = frameAddVehicle;
         this.lorry = lorry;
         this.type = Vehicle.TYPE_LORRY;
@@ -57,7 +58,7 @@ public class AddVehicleController implements ActionListener {
         addEventListeners();
     }
 
-    public AddVehicleController(FrameAddVehicle frameAddVehicle, MiniBus miniBus){
+    public AddVehiclesController(FrameAddVehicle frameAddVehicle, MiniBus miniBus){
         this.frameAddVehicle = frameAddVehicle;
         this.miniBus = miniBus;
         this.type = Vehicle.TYPE_MINI_BUS;
@@ -82,7 +83,6 @@ public class AddVehicleController implements ActionListener {
     public void addToDB() throws FileNotFoundException{
 
         if(!validateForm()){
-            showErrorMessage("Please input all fields", frameAddVehicle);
             return;
         }
 //        int topSpeed, int dailyHireRate, String make, String model, boolean isHired
@@ -127,18 +127,48 @@ public class AddVehicleController implements ActionListener {
         frameAddVehicle.dispose();
     }
 
-    public boolean validateForm(){
+    private boolean validateForm(){
         boolean isUnfinished = false;
 
-        if(frameAddVehicle.getTxtRegNumber().getText().equals("")) isUnfinished = true;
-        if(frameAddVehicle.getTxtDailyHireRate().getText().equals("")) isUnfinished = true;
-        if(frameAddVehicle.getTxtMake().getText().equals("")) isUnfinished = true;
-        if(frameAddVehicle.getTxtModel().getText().equals("")) isUnfinished = true;
-        if(frameAddVehicle.getTxtTopSpeed().getText().equals("")) isUnfinished = true;
-        if(frameAddVehicle.getTxtSpecial1().getText().equals("")) isUnfinished = true;
+        if(!Validator.validateUniqueRegNo(frameAddVehicle.getTxtRegNumber())){
+            showErrorMessage(frameAddVehicle.getLblRegNumber().getText() +
+                    " must be unique!", frameAddVehicle);
+            isUnfinished = true;
+        }
+        if(!Validator.validateIsNumber(frameAddVehicle.getTxtDailyHireRate())){
+            showErrorMessage( frameAddVehicle.getLblDailyHireRate().getText() +
+                    " must be a number!", frameAddVehicle);
+            isUnfinished = true;
+        }
+        if(!Validator.validateNotNull(frameAddVehicle.getTxtMake())){
+            showErrorMessage( frameAddVehicle.getLblMake().getText() +
+                    " is missing!", frameAddVehicle);
+            isUnfinished = true;
+        }
+        if(!Validator.validateNotNull(frameAddVehicle.getTxtModel())){
+            showErrorMessage( frameAddVehicle.getLblModel().getText() +
+                    " is missing!", frameAddVehicle);
+            isUnfinished = true;
+        }
+
+        if(!Validator.validateIsNumber(frameAddVehicle.getTxtTopSpeed())){
+            showErrorMessage( frameAddVehicle.getLblTopSpeed().getText() +
+                    " must be a number!", frameAddVehicle);
+            isUnfinished = true;
+        }
+        if(!Validator.validateNotNull(frameAddVehicle.getTxtSpecial1())){
+            showErrorMessage( frameAddVehicle.getLblSpecial1().getText() +
+                    " is missing!", frameAddVehicle);
+            isUnfinished = true;
+        }
+
 
         // Special 2 is only in car
-        if(type == Vehicle.TYPE_CAR && frameAddVehicle.getTxtSpecial2().getText().equals("")) isUnfinished = true;
+        if(type == Vehicle.TYPE_CAR && !Validator.validateNotNull(frameAddVehicle.getTxtSpecial2())){
+            showErrorMessage( frameAddVehicle.getLblSpecial2().getText() +
+                    " is missing!", frameAddVehicle);
+            isUnfinished = true;
+        }
 
         return !isUnfinished;
     }

@@ -7,10 +7,10 @@ public class FrameLogin extends JFrame {
 
     private JPanel panel;
 
-    private JTextField username;
-    private JPasswordField password;
+    private JTextField txtUsername;
+    private JPasswordField txtPassword;
 
-    private JLabel labelTitle, labelUsername, labelPassword;
+    private JLabel lblTitle, lblUsername, lblPassword;
 
     private JButton btnLogin;
 
@@ -30,28 +30,26 @@ public class FrameLogin extends JFrame {
         new FrameStaffPortal();
     }
 
-    public JPanel createNewLoginPanel(){
+    private JPanel createNewLoginPanel(){
         JPanel parentPanel = new JPanel();
         JPanel panel = new JPanel(new GridBagLayout());
 
-        username = new JTextField();
-        username.setPreferredSize(new Dimension(100, 25));
-        password = new JPasswordField();
-        password.setPreferredSize(new Dimension(100, 25));
+        txtUsername = new JTextField();
+        txtUsername.setPreferredSize(new Dimension(100, 25));
+        txtPassword = new JPasswordField();
+        txtPassword.setPreferredSize(new Dimension(100, 25));
 
-        labelTitle = new JLabel("Staff Login");
-        labelTitle.setPreferredSize(new Dimension(this.getWidth(), 80));
-        labelTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTitle = new JLabel("Login To Your Account");
+        lblTitle.setPreferredSize(new Dimension(this.getWidth(), 80));
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
-        labelTitle.setFont(new Font(null, Font.BOLD, 26));
-        labelPassword = new JLabel("Password");
-        labelUsername = new JLabel("Username");
+        lblTitle.setFont(new Font(null, Font.BOLD, 26));
+        lblPassword = new JLabel("Password");
+        lblUsername = new JLabel("Username");
 
         btnLogin = new JButton("Login");
 
-        parentPanel.add(labelTitle);
-
-
+        parentPanel.add(lblTitle);
 
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -59,15 +57,15 @@ public class FrameLogin extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        panel.add(labelUsername, gbc);
+        panel.add(lblUsername, gbc);
         gbc.gridx = 1;
-        panel.add(username, gbc);
+        panel.add(txtUsername, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        panel.add(labelPassword, gbc);
+        panel.add(lblPassword, gbc);
         gbc.gridx = 1;
-        panel.add(password, gbc);
+        panel.add(txtPassword, gbc);
 
         gbc.gridy = 3;
         gbc.insets = new Insets(20, 8, 8, 8);
@@ -76,5 +74,61 @@ public class FrameLogin extends JFrame {
         parentPanel.add(panel);
 
         return parentPanel;
+    }
+
+    public JButton getBtnLogin() {
+        return btnLogin;
+    }
+
+    public void setBtnLogin(JButton btnLogin) {
+        this.btnLogin = btnLogin;
+    }
+
+    public JPanel getPanel() {
+        return panel;
+    }
+
+    public void setPanel(JPanel panel) {
+        this.panel = panel;
+    }
+
+    public JTextField getTxtUsername() {
+        return txtUsername;
+    }
+
+    public void setTxtUsername(JTextField txtUsername) {
+        this.txtUsername = txtUsername;
+    }
+
+    public JPasswordField getTxtPassword() {
+        return txtPassword;
+    }
+
+    public void setTxtPassword(JPasswordField txtPassword) {
+        this.txtPassword = txtPassword;
+    }
+
+    public JLabel getLblTitle() {
+        return lblTitle;
+    }
+
+    public void setLblTitle(JLabel lblTitle) {
+        this.lblTitle = lblTitle;
+    }
+
+    public JLabel getLblUsername() {
+        return lblUsername;
+    }
+
+    public void setLblUsername(JLabel lblUsername) {
+        this.lblUsername = lblUsername;
+    }
+
+    public JLabel getLblPassword() {
+        return lblPassword;
+    }
+
+    public void setLblPassword(JLabel lblPassword) {
+        this.lblPassword = lblPassword;
     }
 }

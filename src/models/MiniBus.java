@@ -18,6 +18,10 @@ public class MiniBus extends Vehicle implements Serializable {
         setType(TYPE_MINI_BUS);
     }
 
+    public MiniBus(int registrationNumber){
+        super(registrationNumber);
+    }
+
     public MiniBus(int registrationNumber, int topSpeed, int dailyHireRate, String make, String model, boolean isHired, int seatingCapacity) {
         super(registrationNumber, topSpeed, dailyHireRate, make, model, isHired);
         this.seatingCapacity = seatingCapacity;
@@ -46,21 +50,21 @@ public class MiniBus extends Vehicle implements Serializable {
         return miniBuses;
     }
 
+    public static MiniBus getMiniBusWithRegNo(int registrationNumber){
+        FileHandler<MiniBus> fileHandler = new FileHandler<>();
+        return fileHandler.findFirstMatchingObject(FILE_NAME, new MiniBus(registrationNumber));
+    }
+
     public void create() throws FileNotFoundException {
         FileHandler<MiniBus> fileHandler = new FileHandler<MiniBus>();
 
         fileHandler.writeObject(this, FILE_NAME, true);
     }
 
-    public void delete() {
+    public boolean delete() {
         FileHandler<MiniBus> fileHandler = new FileHandler<MiniBus>();
-        boolean delete = fileHandler.deleteFirstMatchingObject(FILE_NAME, this);
+        return fileHandler.deleteMatchingObject(FILE_NAME, this);
 
-        if(delete){
-            System.out.println("Delete Success!");
-        }else{
-            System.out.println("Delete Failed!");
-        }
     }
 
     public static List<MiniBus> getDummyList(){

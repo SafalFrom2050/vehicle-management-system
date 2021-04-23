@@ -1,12 +1,10 @@
-import controllers.StaffPortalController;
+import controllers.LoginsController;
+import models.User;
 import views.FrameLogin;
-import views.FrameStaffPortal;
 
 public class Main {
 
     public static void main(String[] args) {
-
-        StaffPortalController staffPortalController = new StaffPortalController(new FrameStaffPortal(),null);
-        staffPortalController.loadFrame();
+        LoginsController loginsController = new LoginsController(new FrameLogin(), new User());
     }
 }

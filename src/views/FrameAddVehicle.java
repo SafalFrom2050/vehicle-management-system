@@ -29,7 +29,7 @@ public class FrameAddVehicle extends JFrame {
 
     public FrameAddVehicle(){
         setSize(400, 300);          // 4:3 aspect ratio (required on Top to create panel)
-        panel = createAddVehiclePanel();
+        panel = createPanel();
         add(panel);
 
         setTitle("Add New Vehicle");
@@ -39,7 +39,7 @@ public class FrameAddVehicle extends JFrame {
         setVisible(true);
     }
 
-    public JPanel createAddVehiclePanel(){
+    private JPanel createPanel(){
 
         JPanel tempPanel = new JPanel(new GridBagLayout());
 

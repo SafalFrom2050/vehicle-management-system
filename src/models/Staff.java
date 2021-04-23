@@ -17,6 +17,10 @@ public class Staff extends User implements Serializable {
     public Staff(){
     }
 
+    public Staff(String username){
+        super(username);
+    }
+
     public Staff(int staffID, String name, String username, String password){
         super(name, username, password);
         this.staffID = staffID;
@@ -56,22 +60,14 @@ public class Staff extends User implements Serializable {
         return users;
     }
 
-    public void delete() {
+    public boolean delete() {
         FileHandler<Staff> fileHandler = new FileHandler<Staff>();
-        boolean delete = fileHandler.deleteFirstMatchingObject(FILE_NAME, this);
-
-        if(delete){
-            System.out.println("Delete Success!");
-        }else{
-            System.out.println("Delete Failed!");
-        }
+       return fileHandler.deleteMatchingObject(FILE_NAME, this);
     }
 
-    public User getUserWithUsername(String username){
+    public static Staff getUserWithUsername(String username){
         FileHandler<Staff> fileHandler = new FileHandler<Staff>();
         Staff user = fileHandler.findFirstMatchingObject(FILE_NAME, new Staff(-1,"dummyName", username,"dummyPassword"));
-
-        System.out.println(user.getUsername());
 
         return user;
     }

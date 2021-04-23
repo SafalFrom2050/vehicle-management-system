@@ -7,13 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class FrameStaffPortal extends JFrame {
+public class FrameCustomerPortal extends JFrame {
 
     private Font fontMenu = new Font(null, Font.BOLD, 28);
     private JPanel panelMenu = new JPanel();
-    private JButton btnMenuVehicles = new JButton("Vehicles");
-    private JButton btnMenuCustomers = new JButton("Customers");
-    private JButton btnMenuHireRequests = new JButton("Hire Requests");
+    private JButton btnMenuVehicles = new JButton("All Vehicles");
+    private JButton btnMenuMyRents = new JButton("My Rents");
+    private JButton btnMenuMyAccount = new JButton("My Account");
 
     private PanelListView panelListView;
 
@@ -21,8 +21,7 @@ public class FrameStaffPortal extends JFrame {
 
     private JMenuItem menuLogout = new JMenuItem("Logout");
 
-    public FrameStaffPortal(){
-
+    public FrameCustomerPortal(){
         setSize(800, 600);          // 4:3 aspect ratio (required on Top to create panel)
 
         // Set menu bar
@@ -30,8 +29,6 @@ public class FrameStaffPortal extends JFrame {
         JMenu menu = new JMenu("Account");
         menu.add(menuLogout);
         menuBar.add(menu);
-
-        this.setJMenuBar(menuBar);
 
         createNewPanel();
     }
@@ -51,36 +48,38 @@ public class FrameStaffPortal extends JFrame {
 
     }
 
+
     private JPanel getMenuPanel(){
         btnMenuVehicles.setMnemonic(KeyEvent.VK_V);
-        btnMenuCustomers.setMnemonic(KeyEvent.VK_C);
-        btnMenuHireRequests.setMnemonic(KeyEvent.VK_H);
+        btnMenuMyRents.setMnemonic(KeyEvent.VK_R);
+        btnMenuMyAccount.setMnemonic(KeyEvent.VK_A);
 
-        btnMenuCustomers.setFont(fontMenu);
-        btnMenuHireRequests.setFont(fontMenu);
         btnMenuVehicles.setFont(fontMenu);
+        btnMenuMyRents.setFont(fontMenu);
+        btnMenuMyAccount.setFont(fontMenu);
 
         // Keep default color of the button
-        Utility.button_default_color = btnMenuCustomers.getBackground();
+        Utility.button_default_color = btnMenuVehicles.getBackground();
 
-        btnMenuCustomers.setPreferredSize(new Dimension(250, 140));
-        btnMenuHireRequests.setPreferredSize(new Dimension(250, 140));
+        btnMenuMyAccount.setPreferredSize(new Dimension(250, 140));
+        btnMenuMyRents.setPreferredSize(new Dimension(250, 140));
         btnMenuVehicles.setPreferredSize(new Dimension(250, 140));
 
         panelMenu.setLayout(new FlowLayout());
         panelMenu.setPreferredSize(new Dimension(this.getWidth(), 150));
         panelMenu.add(btnMenuVehicles);
-        panelMenu.add(btnMenuCustomers);
-        panelMenu.add(btnMenuHireRequests);
+        panelMenu.add(btnMenuMyRents);
+        panelMenu.add(btnMenuMyAccount);
 
         return panelMenu;
     }
+
 
     private JPanel createDetailsPanel(){
         JPanel parent = new JPanel(new GridBagLayout());
         parent.setPreferredSize(new Dimension(340, 360));
 
-        panelDescriptionBox = new PanelDescriptionBox(360, 300, User.TYPE_STAFF);
+        panelDescriptionBox = new PanelDescriptionBox(360, 300, User.TYPE_CUSTOMER);
         panelDescriptionBox.setHidden();
         parent.add(panelDescriptionBox);
         return parent;
@@ -91,13 +90,11 @@ public class FrameStaffPortal extends JFrame {
         JPanel parent = new JPanel(new GridBagLayout());
         parent.setPreferredSize(new Dimension(this.getWidth()/2+40, 400));
 
-        panelListView = new PanelListView( this.getWidth()/2, 360, User.TYPE_STAFF);
-        panelListView.insertRemoveBtn();
+        panelListView = new PanelListView( this.getWidth()/2, 360, User.TYPE_CUSTOMER);
 
         parent.add(panelListView);
         return parent;
     }
-
 
     public Font getFontMenu() {
         return fontMenu;
@@ -123,20 +120,20 @@ public class FrameStaffPortal extends JFrame {
         this.btnMenuVehicles = btnMenuVehicles;
     }
 
-    public JButton getBtnMenuCustomers() {
-        return btnMenuCustomers;
+    public JButton getBtnMenuMyRents() {
+        return btnMenuMyRents;
     }
 
-    public void setBtnMenuCustomers(JButton btnMenuCustomers) {
-        this.btnMenuCustomers = btnMenuCustomers;
+    public void setBtnMenuMyRents(JButton btnMenuMyRents) {
+        this.btnMenuMyRents = btnMenuMyRents;
     }
 
-    public JButton getBtnMenuHireRequests() {
-        return btnMenuHireRequests;
+    public JButton getBtnMenuMyAccount() {
+        return btnMenuMyAccount;
     }
 
-    public void setBtnMenuHireRequests(JButton btnMenuHireRequests) {
-        this.btnMenuHireRequests = btnMenuHireRequests;
+    public void setBtnMenuMyAccount(JButton btnMenuMyAccount) {
+        this.btnMenuMyAccount = btnMenuMyAccount;
     }
 
     public PanelListView getPanelListView() {

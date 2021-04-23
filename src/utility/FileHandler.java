@@ -90,11 +90,11 @@ public class FileHandler<T> {
             }
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            // Not implemented
         } catch (IOException e) {
-            e.printStackTrace();
+            // Not implemented
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            // Not implemented
         }
 
         return null;
@@ -106,7 +106,7 @@ public class FileHandler<T> {
      *
      * Must override 'equals' method of the object to find the match otherwise does not work
      */
-    public boolean deleteFirstMatchingObject(String fileName, T objComparing){
+    public boolean deleteMatchingObject(String fileName, T objComparing){
         List<T> objectList = new ArrayList<T>();
 
         try {

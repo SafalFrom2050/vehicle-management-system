@@ -17,6 +17,9 @@ public class PanelListView extends JPanel {
     private JButton btnAddCar = new JButton("Add Car"),
             btnAddMiniBus = new JButton("Add Minibus"),
             btnAddLorry = new JButton("Add Lorry"),
+            btnApprove = new JButton("Approve"),
+            btnDisapprove = new JButton("Disapprove"),
+            btnSetExpired = new JButton("Set Expired"),
             btnRemove;
 
     private JButton btnAddStaff = new JButton("Add Staff"),
@@ -25,44 +28,40 @@ public class PanelListView extends JPanel {
     private JList listView = new JList();
 
     private int listType = -1;
+    private int userType = User.TYPE_CUSTOMER;
 
-    public PanelListView(int width, int height){
+    PanelListView(int width, int height, int userType){
         this.height = height;
         this.width = width;
+        this.userType = userType;
 
-        setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),
-                        "Vehicles", TitledBorder.DEFAULT_JUSTIFICATION,
-                        TitledBorder.DEFAULT_POSITION, new Font(null, Font.BOLD, 16)),
-                BorderFactory.createEmptyBorder(0, 1, 0, 1)));
-
+        setTitle("Vehicles");
         setLayout(new FlowLayout());
-        getListPanel();
+        addListPanel();
     }
 
-    public PanelListView(ListModel listModel, int width, int height){
+    private void setTitle(String title){
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),
+                        title, TitledBorder.DEFAULT_JUSTIFICATION,
+                        TitledBorder.DEFAULT_POSITION, new Font(null, Font.BOLD, 16)),
+                BorderFactory.createEmptyBorder(0, 1, 0, 1)));
+    }
+
+    public PanelListView(ListModel listModel, int width, int height, int userType){
         this.listModel = listModel;
         this.height = height;
         this.width = width;
 
-        setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),
-                        "Vehicles", TitledBorder.DEFAULT_JUSTIFICATION,
-                        TitledBorder.DEFAULT_POSITION, new Font(null, Font.BOLD, 16)),
-                BorderFactory.createEmptyBorder(0, 1, 0, 1)));
+        setTitle("Vehicles");
 
         setLayout(new FlowLayout());
-        getListPanel();
+        addListPanel();
     }
 
-    public JPanel getListPanel(){
+    private void addListPanel(){
 
         setListModel(listModel);
-
-        // TODO: Remove
-
-        listView.setCellRenderer(new ListRenderer<Car>(Utility.HEADINGS_VEHICLES));
-        //
 
         setPreferredSize(new Dimension(width, height));
 
@@ -73,7 +72,6 @@ public class PanelListView extends JPanel {
         listView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         add(scrollPane);
-        return this;
     }
 
     private void insertVehicleAddBtn(){
@@ -91,20 +89,72 @@ public class PanelListView extends JPanel {
         this.add(btnAddStaff);
     }
 
+    private void insertHireRequestBtn(){
+        removeActionButtons();
+
+        this.add(btnApprove);
+        this.add(btnDisapprove);
+        this.add(btnSetExpired);
+
+    }
+
     private void removeActionButtons(){
         this.remove(btnAddStaff);
         this.remove(btnAddCustomer);
         this.remove(btnAddCar);
         this.remove(btnAddMiniBus);
         this.remove(btnAddLorry);
+        this.remove(btnApprove);
+        this.remove(btnDisapprove);
+        this.remove(btnSetExpired);
 
         revalidate();
         repaint();
     }
 
-    public void insertRemoveBtn(){
+    void insertRemoveBtn(){
         btnRemove = new JButton("Remove");
         this.add(btnRemove);
+    }
+
+    public void setListModel(ListModel listModel) {
+        this.listModel = listModel;
+
+        if(listModel != null) listView.setModel(listModel);
+    }
+
+    private void setListRenderer(ListRenderer listRenderer){
+        listView.setCellRenderer(listRenderer);
+    }
+
+    public void setListType(int listType){
+
+        if(listType == Vehicle.TYPE_CAR ||
+                listType == Vehicle.TYPE_MINI_BUS  ||
+                listType == Vehicle.TYPE_LORRY  ||
+                listType == Vehicle.TYPE_VEHICLE){
+            this.listType = Vehicle.TYPE_VEHICLE;
+            setTitle("Vehicles");
+            setListRenderer(new ListRenderer<Vehicle>(Utility.HEADINGS_VEHICLES));
+
+            // Only add controls for staff user type
+            if(userType == User.TYPE_STAFF) insertVehicleAddBtn();
+        }else if(listType == User.TYPE_USER ||
+                listType == User.TYPE_CUSTOMER ||
+                listType == User.TYPE_STAFF){
+
+            this.listType = User.TYPE_USER;
+            setTitle("All Users");
+            setListRenderer(new ListRenderer<Staff>(Utility.HEADINGS_USERS));
+            // Only add controls for staff user type
+            if(userType == User.TYPE_STAFF) insertUserAddBtn();
+        }else if(listType == HiredVehicle.TYPE_HIRED_VEHICLE){
+            this.listType = HiredVehicle.TYPE_HIRED_VEHICLE;
+            setTitle("Hired Vehicles");
+            setListRenderer(new ListRenderer<HiredVehicle>(Utility.HEADINGS_HIRED_VEHICLES));
+            // Only add controls for staff user type
+            if(userType == User.TYPE_STAFF) insertHireRequestBtn();
+        }
     }
 
     public JButton getBtnAddCar() {
@@ -167,36 +217,6 @@ public class PanelListView extends JPanel {
         return listModel;
     }
 
-    public void setListModel(ListModel listModel) {
-        this.listModel = listModel;
-
-        if(listModel != null) listView.setModel(listModel);
-    }
-
-    public void setListRenderer(ListRenderer listRenderer){
-        listView.setCellRenderer(listRenderer);
-    }
-
-    public void setListType(int listType){
-
-        if(listType == Vehicle.TYPE_CAR ||
-                listType == Vehicle.TYPE_MINI_BUS  ||
-                listType == Vehicle.TYPE_LORRY  ||
-                listType == Vehicle.TYPE_VEHICLE){
-
-            this.listType = Vehicle.TYPE_VEHICLE;
-            setListRenderer(new ListRenderer<Vehicle>(Utility.HEADINGS_VEHICLES));
-            insertVehicleAddBtn();
-        }else if(listType == User.TYPE_USER ||
-                listType == User.TYPE_CUSTOMER ||
-                listType == User.TYPE_STAFF){
-
-            this.listType = User.TYPE_USER;
-            setListRenderer(new ListRenderer<Staff>(Utility.HEADINGS_USERS));
-            insertUserAddBtn();
-        }
-    }
-
     public int getListType(){
         return listType;
     }
@@ -207,5 +227,38 @@ public class PanelListView extends JPanel {
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+
+    public JButton getBtnApprove() {
+        return btnApprove;
+    }
+
+    public void setBtnApprove(JButton btnApprove) {
+        this.btnApprove = btnApprove;
+    }
+
+    public JButton getBtnDisapprove() {
+        return btnDisapprove;
+    }
+
+    public void setBtnDisapprove(JButton btnDisapprove) {
+        this.btnDisapprove = btnDisapprove;
+    }
+
+    public JButton getBtnSetExpired() {
+        return btnSetExpired;
+    }
+
+    public void setBtnSetExpired(JButton btnSetExpired) {
+        this.btnSetExpired = btnSetExpired;
+    }
+
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
     }
 }

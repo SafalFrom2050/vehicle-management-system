@@ -10,6 +10,7 @@ public class Utility {
 
     public final static String[] HEADINGS_VEHICLES = {"Reg. No:", "Make", "Model"};
     public final static String[] HEADINGS_USERS = {"Username", "Name", "Type"};
+    public final static String[] HEADINGS_HIRED_VEHICLES = {"Customer", "Type", "Make", "Status"};
 
     public static Color button_default_color;
 
@@ -17,6 +18,8 @@ public class Utility {
     public static Font FONT_LIST_ITEM = new Font(null, Font.PLAIN, 16);
     public static Font FONT_DESCRIPTION_LABEL = new Font(null, Font.PLAIN, 14);
     public static Font FONT_DESCRIPTION_TEXTFIELD = new Font(null, Font.PLAIN, 14);
+
+    public static String username;
 
     public static boolean createDirectory(String dir){
         File file = new File(dir);

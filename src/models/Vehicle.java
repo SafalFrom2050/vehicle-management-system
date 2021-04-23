@@ -1,5 +1,7 @@
 package models;
 
+import utility.FileHandler;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,10 @@ public class Vehicle implements Serializable {
 
     public Vehicle(){
 
+    }
+
+    public Vehicle(int registrationNumber){
+        this.registrationNumber = registrationNumber;
     }
 
     public Vehicle(int registrationNumber, int topSpeed, int dailyHireRate, String make, String model, boolean isHired) {
@@ -110,20 +116,36 @@ public class Vehicle implements Serializable {
         return vehicles;
     }
 
-    public void delete(){
+    public static Vehicle getVehicleWithRegNo(int registrationNumber){
+        Vehicle vehicle;
+
+        if((vehicle = Car.getCarWithRegNo(registrationNumber)) != null){
+            return vehicle;
+        }else if((vehicle = MiniBus.getMiniBusWithRegNo(registrationNumber)) != null){
+            return vehicle;
+        }else if((vehicle = Lorry.getLorryWithRegNo(registrationNumber)) != null){
+            return vehicle;
+        }
+
+        return null;
+    }
+
+    public boolean delete(){
         if(type == TYPE_CAR){
             Car car = new Car();
             car.setRegistrationNumber(registrationNumber);
-            car.delete();
+            return car.delete();
         }else if(type == TYPE_MINI_BUS){
             MiniBus miniBus = new MiniBus();
             miniBus.setRegistrationNumber(registrationNumber);
-            miniBus.delete();
+            return miniBus.delete();
         }else if(type == TYPE_LORRY){
             Lorry lorry = new Lorry();
             lorry.setRegistrationNumber(registrationNumber);
-            lorry.delete();
+            return lorry.delete();
         }
+
+        return false;
     }
 
     @Override

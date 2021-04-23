@@ -18,11 +18,11 @@ public class User implements Serializable {
 
     public User(String name, String username, String password){
         this.name = name;
-        this.username = username;
+        this.username = username.toLowerCase();
         this.password = password;
     }
     public User(String username){
-        this.username = username;
+        this.username = username.toLowerCase();
     }
 
     public String getName() {
@@ -38,7 +38,7 @@ public class User implements Serializable {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username.toLowerCase();
     }
 
     public String getPassword() {
@@ -67,10 +67,20 @@ public class User implements Serializable {
         }
     }
 
+    public boolean delete(){
+        if((new Customer(this.username)).delete()){
+           return true;
+        }else if((new Staff(this.username)).delete()){
+            return true;
+        }
+
+        return false;
+    }
+
     // Overriding 'equals' method to compare username
     @Override
     public boolean equals(Object obj) {
         User user = (User) obj;
-        return (username.equals(user.username));
+        return (username.equalsIgnoreCase(user.getUsername()));
     }
 }

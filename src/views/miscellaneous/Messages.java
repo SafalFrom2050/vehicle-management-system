@@ -15,4 +15,10 @@ public class Messages {
         dialog.setAlwaysOnTop(true);
         dialog.setVisible(true);
     }
+
+    public static int showConfirmationMessage(String title, String body, JFrame frame){
+        // Show confirmation message
+        return JOptionPane.showConfirmDialog(frame,
+                body, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+    }
 }

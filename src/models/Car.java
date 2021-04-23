@@ -2,6 +2,7 @@ package models;
 
 import utility.FileHandler;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,6 +20,10 @@ public class Car extends Vehicle implements Serializable {
 
     public Car(){
         setType(TYPE_CAR);
+    }
+
+    public Car(int registrationNumber){
+        super(registrationNumber);
     }
 
     public Car(int registrationNumber, int topSpeed, int dailyHireRate, String make, String model, boolean isHired, String fuelType, int numberOfDoors) {
@@ -67,15 +72,9 @@ public class Car extends Vehicle implements Serializable {
         fileHandler.writeObject(this, FILE_NAME, true);
     }
 
-    public void delete() {
+    public boolean delete() {
         FileHandler<Car> fileHandler = new FileHandler<Car>();
-        boolean delete = fileHandler.deleteFirstMatchingObject(FILE_NAME, this);
-
-        if(delete){
-            System.out.println("Delete Success!");
-        }else{
-            System.out.println("Delete Failed!");
-        }
+        return fileHandler.deleteMatchingObject(FILE_NAME, this);
     }
 
     public List getCarsList(){
@@ -83,5 +82,10 @@ public class Car extends Vehicle implements Serializable {
         List cars = fileHandler.readObjects(FILE_NAME);
 
         return cars;
+    }
+
+    public static Car getCarWithRegNo(int registrationNumber){
+        FileHandler<Car> fileHandler = new FileHandler<>();
+        return fileHandler.findFirstMatchingObject(FILE_NAME, new Car(registrationNumber));
     }
 }

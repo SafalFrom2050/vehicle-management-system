@@ -1,11 +1,9 @@
 package controllers;
 
-import models.Car;
+import models.*;
 
-import models.Staff;
-import models.User;
-import models.Vehicle;
 import utility.Utility;
+import views.listitems.ListItemHiredVehicle;
 import views.listitems.ListItemUser;
 import views.listitems.ListItemVehicle;
 
@@ -40,6 +38,9 @@ public class ListRenderer<T> extends JPanel implements ListCellRenderer {
         }else if(model instanceof User){
             ListItemUser listItemUser = new ListItemUser((User) model);
             this.add(listItemUser);
+        }else if(model instanceof HiredVehicle) {
+            ListItemHiredVehicle listItemHiredVehicle = new ListItemHiredVehicle((HiredVehicle) model);
+            this.add(listItemHiredVehicle);
         }
 
         this.getComponent(0).setPreferredSize(new Dimension(list.getWidth(), 35));

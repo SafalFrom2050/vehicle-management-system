@@ -19,6 +19,10 @@ public class Lorry extends Vehicle implements Serializable {
         setType(TYPE_LORRY);
     }
 
+    public Lorry(int registrationNumber){
+        super(registrationNumber);
+    }
+
     public Lorry(int registrationNumber, int topSpeed, int dailyHireRate, String make, String model, boolean isHired, int loadingCapacity) {
         super(registrationNumber, topSpeed, dailyHireRate, make, model, isHired);
         this.loadingCapacity = loadingCapacity;
@@ -40,15 +44,10 @@ public class Lorry extends Vehicle implements Serializable {
         fileHandler.writeObject(this, FILE_NAME, true);
     }
 
-    public void delete() {
+    public boolean delete() {
         FileHandler<Lorry> fileHandler = new FileHandler<Lorry>();
-        boolean delete = fileHandler.deleteFirstMatchingObject(FILE_NAME, this);
+        return fileHandler.deleteMatchingObject(FILE_NAME, this);
 
-        if(delete){
-            System.out.println("Delete Success!");
-        }else{
-            System.out.println("Delete Failed!");
-        }
     }
 
     public List getLorrysList(){
@@ -56,6 +55,11 @@ public class Lorry extends Vehicle implements Serializable {
         List lorrys = fileHandler.readObjects(FILE_NAME);
 
         return lorrys;
+    }
+
+    public static Lorry getLorryWithRegNo(int registrationNumber){
+        FileHandler<Lorry> fileHandler = new FileHandler<>();
+        return fileHandler.findFirstMatchingObject(FILE_NAME, new Lorry(registrationNumber));
     }
 
     public static List<Lorry> getDummyList(){

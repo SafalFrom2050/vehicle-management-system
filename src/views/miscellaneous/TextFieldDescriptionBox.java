@@ -19,5 +19,16 @@ public class TextFieldDescriptionBox extends JTextField {
         this.setFont(Utility.FONT_DESCRIPTION_TEXTFIELD);
         this.setHorizontalAlignment(SwingConstants.CENTER);
         this.setColumns(10);
+
+        // Set tooltip text to textfield text
+        this.setToolTipText(getText());
+    }
+
+    @Override
+    public void setText(String t) {
+        super.setText(t);
+
+        // Set tooltip text to textfield text
+        this.setToolTipText(getText());
     }
 }

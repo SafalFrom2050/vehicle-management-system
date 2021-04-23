@@ -97,22 +97,14 @@ public class Customer extends User implements Serializable {
         return users;
     }
 
-    public void delete() {
+    public boolean delete() {
         FileHandler<Customer> fileHandler = new FileHandler<Customer>();
-        boolean delete = fileHandler.deleteFirstMatchingObject(FILE_NAME, this);
-
-        if(delete){
-            System.out.println("Delete Success!");
-        }else{
-            System.out.println("Delete Failed!");
-        }
+        return fileHandler.deleteMatchingObject(FILE_NAME, this);
     }
 
-    public User getUserWithUsername(String username){
+    public static Customer getUserWithUsername(String username){
         FileHandler<Customer> fileHandler = new FileHandler<Customer>();
         Customer user = fileHandler.findFirstMatchingObject(FILE_NAME, new Customer(username));
-
-        System.out.println(user.getUsername());
 
         return user;
     }

@@ -3,6 +3,7 @@ package controllers;
 import models.Customer;
 import models.Staff;
 import models.User;
+import utility.Validator;
 import views.FrameAddUser;
 import views.miscellaneous.Messages;
 
@@ -11,7 +12,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
 
-public class AddUserController implements ActionListener {
+import static views.miscellaneous.Messages.showErrorMessage;
+import static views.miscellaneous.Messages.showMessage;
+
+public class AddUsersController implements ActionListener {
 
     private FrameAddUser frameAddUser;
 
@@ -24,7 +28,7 @@ public class AddUserController implements ActionListener {
 
     // TODO: Usage of model to load default data
 
-    public AddUserController(FrameAddUser frameAddUser, Customer customer){
+    public AddUsersController(FrameAddUser frameAddUser, Customer customer){
         this.frameAddUser = frameAddUser;
         this.customer = customer;
 
@@ -33,7 +37,7 @@ public class AddUserController implements ActionListener {
         setListeners();
     }
 
-    public AddUserController(FrameAddUser frameAddUser, Staff staff){
+    public AddUsersController(FrameAddUser frameAddUser, Staff staff){
         this.frameAddUser = frameAddUser;
         this.staff = staff;
 
@@ -52,6 +56,11 @@ public class AddUserController implements ActionListener {
     }
 
     private void addToDB() throws FileNotFoundException {
+
+        if(!validateForm()){
+            return;
+        }
+
         if(type == User.TYPE_STAFF){
             int staffID = Integer.parseInt(frameAddUser.getTxtStaffID().getText());
             String name = frameAddUser.getTxtName().getText();
@@ -81,6 +90,66 @@ public class AddUserController implements ActionListener {
 
         Messages.showMessage("Added Successfully!", frameAddUser);
         frameAddUser.dispose();
+    }
+
+    private boolean validateForm(){
+        boolean isUnfinished = false;
+
+        if(!Validator.validateUniqueUsername(frameAddUser.getTxtUsername())){
+            showErrorMessage(frameAddUser.getLblUsername().getText() +
+                    " must be unique!", frameAddUser);
+            isUnfinished = true;
+        }
+
+        if(!Validator.validateNotNull(frameAddUser.getTxtPassword())){
+            showErrorMessage(frameAddUser.getLblPassword().getText() +
+                    " is missing!", frameAddUser);
+            isUnfinished = true;
+        }
+
+        if(!Validator.validateNotNull(frameAddUser.getTxtName())){
+            showErrorMessage(frameAddUser.getLblName().getText() +
+                    " is missing!", frameAddUser);
+            isUnfinished = true;
+        }
+
+        // Staff specific properties
+        if(type == User.TYPE_STAFF && !Validator.validateIsNumber(frameAddUser.getTxtStaffID())){
+            showErrorMessage(frameAddUser.getLblStaffID().getText() +
+                    " is missing!", frameAddUser);
+            isUnfinished = true;
+        }
+
+        // Validation steps completed for staff
+        if(type == User.TYPE_STAFF) return !isUnfinished;
+
+        // Customer specific properties
+
+        if(!Validator.validateIsNumber(frameAddUser.getTxtCustomerID())){
+            showErrorMessage(frameAddUser.getLblCustomerID().getText() +
+                    " is missing!", frameAddUser);
+            isUnfinished = true;
+        }
+
+        if(!Validator.validateNotNull(frameAddUser.getTxtAddress())){
+            showErrorMessage(frameAddUser.getLblAddress().getText() +
+                    " is missing!", frameAddUser);
+            isUnfinished = true;
+        }
+
+        if(!Validator.validateNotNull(frameAddUser.getTxtPhoneNumber())){
+            showErrorMessage(frameAddUser.getLblPhoneNumber().getText() +
+                    " is missing!", frameAddUser);
+            isUnfinished = true;
+        }
+
+        if(!Validator.validateNotNull(frameAddUser.getTxtEmail())){
+            showErrorMessage(frameAddUser.getLblEmail().getText() +
+                    " is missing!", frameAddUser);
+            isUnfinished = true;
+        }
+
+        return !isUnfinished;
     }
 
     @Override
