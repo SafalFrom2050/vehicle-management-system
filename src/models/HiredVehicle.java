@@ -49,7 +49,7 @@ public class HiredVehicle implements Serializable {
         return fileHandler.deleteMatchingObject(FILE_NAME, this);
     }
 
-    public List<HiredVehicle> getHiredVehiclesList(){
+    public static List<HiredVehicle> getHiredVehiclesList(){
         FileHandler<HiredVehicle> fileHandler = new FileHandler<HiredVehicle>();
         List hiredVehicles = fileHandler.readObjects(FILE_NAME);
 

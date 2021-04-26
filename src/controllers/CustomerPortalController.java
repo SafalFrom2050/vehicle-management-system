@@ -70,6 +70,9 @@ public class CustomerPortalController implements ActionListener, ListSelectionLi
             frameCustomerPortal.getBtnMenuMyAccount().setBackground(Utility.BUTTON_SELECTED_COLOR);
             type = User.TYPE_USER;
         }
+
+        // Hide description box
+        frameCustomerPortal.getPanelDescriptionBox().setHidden();
     }
 
     private void loadVehicles(){
@@ -191,9 +194,6 @@ public class CustomerPortalController implements ActionListener, ListSelectionLi
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        // Hide description box on any action
-        frameCustomerPortal.getPanelDescriptionBox().setHidden();
-
         if(source == frameCustomerPortal.getBtnMenuVehicles()){
             setSelectedMainMenuItem(BUTTON_ACTION_VEHICLES);
             loadVehicles();
@@ -230,6 +230,10 @@ public class CustomerPortalController implements ActionListener, ListSelectionLi
                 setVehicleDescription(obj);
             }else if(frameCustomerPortal.getPanelListView().getListType() == HiredVehicle.TYPE_HIRED_VEHICLE){
                 setHiredVehicleDescription(obj);
+            }else {
+                // Ensure remove/edit buttons has no effect on previously selected items
+                selectedVehicle = null;
+                selectedHiredVehicle = null;
             }
         }
     }

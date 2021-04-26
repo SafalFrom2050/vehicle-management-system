@@ -187,6 +187,7 @@ public class PanelDescriptionBox extends JPanel {
 
         txtStaffID.setText(Integer.toString(staffModel.getStaffID()));
         txtUsername.setText(staffModel.getUsername());
+        txtName.setText(staffModel.getName());
 
         // Password is set, but is hidden due to JPasswordType
         txtPassword.setText(staffModel.getPassword());

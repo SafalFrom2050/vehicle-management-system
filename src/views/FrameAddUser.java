@@ -19,7 +19,7 @@ public class FrameAddUser extends JFrame {
     private JTextField txtStaffID = new JTextField(),
             txtCustomerID = new JTextField(),
             txtUsername = new JTextField(),
-            txtPassword = new JTextField(),
+            txtPassword = new JPasswordField(),
             txtName = new JTextField(),
             txtPhoneNumber = new JTextField(),
             txtAddress = new JTextField(),

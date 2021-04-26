@@ -26,7 +26,6 @@ public class AddUsersController implements ActionListener {
 
     private WindowListener windowListener;
 
-    // TODO: Usage of model to load default data
 
     public AddUsersController(FrameAddUser frameAddUser, Customer customer){
         this.frameAddUser = frameAddUser;
@@ -69,7 +68,6 @@ public class AddUsersController implements ActionListener {
 
             staff = new Staff(staffID, name, username, passsword);
 
-            // TODO: Validate
             staff.create();
         }else if(type == User.TYPE_CUSTOMER){
             int customerID = Integer.parseInt(frameAddUser.getTxtCustomerID().getText());
@@ -82,13 +80,13 @@ public class AddUsersController implements ActionListener {
 
             customer = new Customer(customerID, name, username, password, phoneNumber, address, email);
 
-            // TODO: Validate
             customer.create();
         }else{
             return;
         }
 
         Messages.showMessage("Added Successfully!", frameAddUser);
+        windowListener.windowClosing(null);
         frameAddUser.dispose();
     }
 

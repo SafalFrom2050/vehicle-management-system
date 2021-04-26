@@ -8,6 +8,7 @@ import utility.Utility;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class PanelListView extends JPanel {
 
@@ -20,7 +21,7 @@ public class PanelListView extends JPanel {
             btnApprove = new JButton("Approve"),
             btnDisapprove = new JButton("Disapprove"),
             btnSetExpired = new JButton("Set Expired"),
-            btnRemove;
+            btnRemove = new JButton("Remove");
 
     private JButton btnAddStaff = new JButton("Add Staff"),
             btnAddCustomer = new JButton("Add Customer");
@@ -70,8 +71,17 @@ public class PanelListView extends JPanel {
         listView.setFixedCellWidth(width - 20);
 
         listView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
         add(scrollPane);
+
+        setBtnMnemonics();
+        setActionBtnEnabled(false);
+    }
+
+    private void setBtnMnemonics(){
+        btnRemove.setMnemonic(KeyEvent.VK_R);
+        btnApprove.setMnemonic(KeyEvent.VK_A);
+        btnDisapprove.setMnemonic(KeyEvent.VK_D);
+        btnSetExpired.setMnemonic(KeyEvent.VK_E);
     }
 
     private void insertVehicleAddBtn(){
@@ -112,13 +122,20 @@ public class PanelListView extends JPanel {
         repaint();
     }
 
+    public void setActionBtnEnabled(boolean e){
+        btnSetExpired.setEnabled(e);
+        btnDisapprove.setEnabled(e);
+        btnApprove.setEnabled(e);
+        btnRemove.setEnabled(e);
+    }
+
     void insertRemoveBtn(){
-        btnRemove = new JButton("Remove");
         this.add(btnRemove);
     }
 
     public void setListModel(ListModel listModel) {
         this.listModel = listModel;
+        listView.requestFocus();
 
         if(listModel != null) listView.setModel(listModel);
     }

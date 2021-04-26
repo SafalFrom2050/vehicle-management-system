@@ -29,6 +29,7 @@ public class FrameCustomerPortal extends JFrame {
         JMenu menu = new JMenu("Account");
         menu.add(menuLogout);
         menuBar.add(menu);
+        setJMenuBar(menuBar);
 
         createNewPanel();
     }

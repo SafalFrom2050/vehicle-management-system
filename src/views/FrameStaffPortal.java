@@ -12,14 +12,16 @@ public class FrameStaffPortal extends JFrame {
     private Font fontMenu = new Font(null, Font.BOLD, 28);
     private JPanel panelMenu = new JPanel();
     private JButton btnMenuVehicles = new JButton("Vehicles");
-    private JButton btnMenuCustomers = new JButton("Customers");
+    private JButton btnMenuUsers = new JButton("Users");
     private JButton btnMenuHireRequests = new JButton("Hire Requests");
 
     private PanelListView panelListView;
 
     private PanelDescriptionBox panelDescriptionBox;
 
-    private JMenuItem menuLogout = new JMenuItem("Logout");
+    private JMenuItem menuLogout = new JMenuItem("Logout"),
+            menuQueryVehicle = new JMenuItem("Vehicles"),
+            menuQueryUser = new JMenuItem("Users");
 
     public FrameStaffPortal(){
 
@@ -27,9 +29,15 @@ public class FrameStaffPortal extends JFrame {
 
         // Set menu bar
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Account");
-        menu.add(menuLogout);
-        menuBar.add(menu);
+        JMenu menuAccount = new JMenu("Account");
+        menuAccount.add(menuLogout);
+
+        JMenu menuQuery = new JMenu("Query");
+        menuQuery.add(menuQueryUser);
+        menuQuery.add(menuQueryVehicle);
+
+        menuBar.add(menuAccount);
+        menuBar.add(menuQuery);
 
         this.setJMenuBar(menuBar);
 
@@ -53,24 +61,24 @@ public class FrameStaffPortal extends JFrame {
 
     private JPanel getMenuPanel(){
         btnMenuVehicles.setMnemonic(KeyEvent.VK_V);
-        btnMenuCustomers.setMnemonic(KeyEvent.VK_C);
+        btnMenuUsers.setMnemonic(KeyEvent.VK_U);
         btnMenuHireRequests.setMnemonic(KeyEvent.VK_H);
 
-        btnMenuCustomers.setFont(fontMenu);
+        btnMenuUsers.setFont(fontMenu);
         btnMenuHireRequests.setFont(fontMenu);
         btnMenuVehicles.setFont(fontMenu);
 
         // Keep default color of the button
-        Utility.button_default_color = btnMenuCustomers.getBackground();
+        Utility.button_default_color = btnMenuUsers.getBackground();
 
-        btnMenuCustomers.setPreferredSize(new Dimension(250, 140));
+        btnMenuUsers.setPreferredSize(new Dimension(250, 140));
         btnMenuHireRequests.setPreferredSize(new Dimension(250, 140));
         btnMenuVehicles.setPreferredSize(new Dimension(250, 140));
 
         panelMenu.setLayout(new FlowLayout());
         panelMenu.setPreferredSize(new Dimension(this.getWidth(), 150));
         panelMenu.add(btnMenuVehicles);
-        panelMenu.add(btnMenuCustomers);
+        panelMenu.add(btnMenuUsers);
         panelMenu.add(btnMenuHireRequests);
 
         return panelMenu;
@@ -123,12 +131,12 @@ public class FrameStaffPortal extends JFrame {
         this.btnMenuVehicles = btnMenuVehicles;
     }
 
-    public JButton getBtnMenuCustomers() {
-        return btnMenuCustomers;
+    public JButton getBtnMenuUsers() {
+        return btnMenuUsers;
     }
 
-    public void setBtnMenuCustomers(JButton btnMenuCustomers) {
-        this.btnMenuCustomers = btnMenuCustomers;
+    public void setBtnMenuUsers(JButton btnMenuUsers) {
+        this.btnMenuUsers = btnMenuUsers;
     }
 
     public JButton getBtnMenuHireRequests() {
@@ -161,5 +169,21 @@ public class FrameStaffPortal extends JFrame {
 
     public void setMenuLogout(JMenuItem menuLogout) {
         this.menuLogout = menuLogout;
+    }
+
+    public JMenuItem getMenuQueryVehicle() {
+        return menuQueryVehicle;
+    }
+
+    public void setMenuQueryVehicle(JMenuItem menuQueryVehicle) {
+        this.menuQueryVehicle = menuQueryVehicle;
+    }
+
+    public JMenuItem getMenuQueryUser() {
+        return menuQueryUser;
+    }
+
+    public void setMenuQueryUser(JMenuItem menuQueryUser) {
+        this.menuQueryUser = menuQueryUser;
     }
 }

@@ -14,6 +14,7 @@ public class Utility {
 
     public static Color button_default_color;
 
+    public static Font FONT_BIG_HEADING = new Font(null, Font.BOLD, 20);
     public static Font FONT_LIST_HEADING = new Font(null, Font.BOLD, 12);
     public static Font FONT_LIST_ITEM = new Font(null, Font.PLAIN, 16);
     public static Font FONT_DESCRIPTION_LABEL = new Font(null, Font.PLAIN, 14);

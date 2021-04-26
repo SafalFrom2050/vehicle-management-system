@@ -2,6 +2,7 @@ package controllers;
 
 import models.*;
 import utility.Utility;
+import utility.Validator;
 import views.FrameAddHireRequest;
 import views.miscellaneous.Messages;
 
@@ -30,12 +31,21 @@ public class AddHireRequestsController implements ActionListener {
         setEventListeners();
     }
 
+    // Set data into the form
     private void loadDataIntoGUI(){
         int regNo = hiredVehicleModel.getVehicleRegNo();
         vehicle = Vehicle.getVehicleWithRegNo(regNo);
 
-        frameAddHireRequest.getLblVehicleRegNumber().setText("Vehicle Reg No. " + regNo);
-        frameAddHireRequest.getLblVehicleName().setText("Vehicle Make: " + vehicle.getMake());
+        frameAddHireRequest.getLblVehicleRegNumber().setText("Vehicle Reg No. \t\t" + regNo);
+        frameAddHireRequest.getLblVehicleName().setText("Vehicle Make: \t\t" + vehicle.getMake());
+
+        // only ask for loading capacity for Lorry and seating capacity for Minibus
+        if(vehicle.getType() == Vehicle.TYPE_MINI_BUS){
+            frameAddHireRequest.removeLoadingCapacity();
+        }else if(vehicle.getType() == Vehicle.TYPE_LORRY){
+            frameAddHireRequest.removeSeatingCapacity();
+        }
+
     }
 
     private void setEventListeners(){
@@ -49,6 +59,8 @@ public class AddHireRequestsController implements ActionListener {
 
 
     private void addToDB() throws FileNotFoundException {
+
+        if(!validate()) return;
 
         // No need for validation as additional information is optional
         String additionalInfo = frameAddHireRequest.getTxtAdditionalInfo().getText();
@@ -79,6 +91,51 @@ public class AddHireRequestsController implements ActionListener {
                 "Please check the approval status on 'My Rents' section.", frameAddHireRequest);
 
         frameAddHireRequest.dispose();
+    }
+
+    private boolean validate(){
+        boolean isUnfinished = false;
+
+        // Check 'Loading Capacity' for lorry type and 'Seating capacity' for minibus type
+        if(vehicle.getType() == Vehicle.TYPE_LORRY){
+            if(!Validator.validateIsNumber(frameAddHireRequest.getTxtLoadingCapacity())){
+                isUnfinished = true;
+                Messages.showErrorMessage(frameAddHireRequest.getLblLoadingCapacity().getText() +
+                        " must be a number", frameAddHireRequest);
+            }else{
+                // Validate load capacity is under supported number
+                int loads = Integer.parseInt(frameAddHireRequest.getTxtLoadingCapacity().getText());
+                int supportedLoads = ((Lorry) vehicle).getLoadingCapacity();
+
+                if(loads > supportedLoads){
+                    isUnfinished = true;
+                    Messages.showErrorMessage(frameAddHireRequest.getLblLoadingCapacity().getText() +
+                            " for the selected vehicle can only be upto " + supportedLoads, frameAddHireRequest);
+                }
+            }
+
+        }else if(vehicle.getType() == Vehicle.TYPE_MINI_BUS){
+            if(!Validator.validateIsNumber(frameAddHireRequest.getTxtSeatingCapacity())){
+                isUnfinished = true;
+                Messages.showErrorMessage(frameAddHireRequest.getLblSeatingCapacity().getText() +
+                        " must be a number", frameAddHireRequest);
+            }else{
+                // Validate if required seats are below the total number of seats
+                int seats = Integer.parseInt(frameAddHireRequest.getTxtSeatingCapacity().getText());
+                int supportedSeats = ((MiniBus) vehicle).getSeatingCapacity();
+
+                if(seats > supportedSeats){
+                    isUnfinished = true;
+                    Messages.showErrorMessage(frameAddHireRequest.getLblLoadingCapacity().getText() +
+                            " for the selected vehicle can only be upto " + supportedSeats, frameAddHireRequest);
+                }
+            }
+        }
+
+
+
+
+        return !isUnfinished;
     }
 
     @Override
