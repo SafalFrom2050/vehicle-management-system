@@ -17,7 +17,15 @@ public class Validator {
     public static boolean validateNotNull(JTextField textField){
 
         // Check if null
-        return !textField.getText().equals("");
+        return validateNotNull(textField.getText());
+    }
+    public static boolean validateNotNull(String s){
+
+        // Check if null
+        if(s==null) return false;
+
+        // Check if empty string
+        return !s.equals("");
     }
 
     /**
@@ -27,12 +35,15 @@ public class Validator {
      * @return Validation result(true:pass / false:fail)
      */
     public static boolean validateIsNumber(JTextField textField){
-        // Check if text not null
-        if(!validateNotNull(textField)) return false;
 
-        String text = textField.getText();
+        return validateIsNumber(textField.getText());
+    }
+    public static boolean validateIsNumber(String s){
+        // Check if text not null
+        if(!validateNotNull(s)) return false;
+
         try{
-            int num = Integer.parseInt(text);
+            int num = Integer.parseInt(s);
         }catch (NumberFormatException e){
             return false;
         }
@@ -58,10 +69,7 @@ public class Validator {
         if(Customer.getUserWithUsername(username) != null) return false;
 
         // If not found, check if any staff with the username exists
-        if(Staff.getUserWithUsername(username) != null) return false;
-
-        // Validation Complete!
-        return true;
+        return Staff.getUserWithUsername(username) == null;
     }
 
 
@@ -81,11 +89,9 @@ public class Validator {
         int regNo = Integer.parseInt(textField.getText());
 
         // Finally check if vehicle with same registration number exists
-        if(Vehicle.getVehicleWithRegNo(regNo) != null) return false;
-
+        return Vehicle.getVehicleWithRegNo(regNo) == null;
 
         // Validation Complete!
-        return true;
     }
 
 }

@@ -2,6 +2,7 @@ package uon.vehiclehiresystem.controllers;
 
 import uon.vehiclehiresystem.models.ListModel;
 import uon.vehiclehiresystem.utility.Utility;
+import uon.vehiclehiresystem.utility.Validator;
 import uon.vehiclehiresystem.views.miscellaneous.Messages;
 import uon.vehiclehiresystem.models.*;
 import uon.vehiclehiresystem.views.*;
@@ -82,16 +83,20 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
         frameStaffPortal.getBtnMenuUsers().setBackground(Utility.button_default_color);
         frameStaffPortal.getBtnMenuHireRequests().setBackground(Utility.button_default_color);
 
-        if(buttonAction == BUTTON_ACTION_VEHICLES){
-            frameStaffPortal.getBtnMenuVehicles().setBackground(Utility.BUTTON_SELECTED_COLOR);
-            type = Vehicle.TYPE_VEHICLE;
-        }else if(buttonAction == BUTTON_ACTION_USERS){
-            frameStaffPortal.getBtnMenuUsers().setBackground(Utility.BUTTON_SELECTED_COLOR);
-            type = User.TYPE_USER;
-        }else if(buttonAction == BUTTON_ACTION_HIRE_REQUESTS){
-            frameStaffPortal.getBtnMenuHireRequests().setBackground(Utility.BUTTON_SELECTED_COLOR);
-            type = HiredVehicle.TYPE_HIRED_VEHICLE;
-        }
+         switch (buttonAction) {
+             case BUTTON_ACTION_VEHICLES:
+                 frameStaffPortal.getBtnMenuVehicles().setBackground(Utility.BUTTON_SELECTED_COLOR);
+                 type = Vehicle.TYPE_VEHICLE;
+                 break;
+             case BUTTON_ACTION_USERS:
+                 frameStaffPortal.getBtnMenuUsers().setBackground(Utility.BUTTON_SELECTED_COLOR);
+                 type = User.TYPE_USER;
+                 break;
+             case BUTTON_ACTION_HIRE_REQUESTS:
+                 frameStaffPortal.getBtnMenuHireRequests().setBackground(Utility.BUTTON_SELECTED_COLOR);
+                 type = HiredVehicle.TYPE_HIRED_VEHICLE;
+                 break;
+         }
 
          // Hide description box
          frameStaffPortal.getPanelDescriptionBox().setHidden();
@@ -108,9 +113,8 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
      }
 
      private void loadHiredVehicles(){
-        HiredVehicle hiredVehicle = new HiredVehicle();
 
-        uon.vehiclehiresystem.models.ListModel<HiredVehicle> hiredVehicleListModel = new uon.vehiclehiresystem.models.ListModel<>(hiredVehicle.getHiredVehiclesList());
+        uon.vehiclehiresystem.models.ListModel<HiredVehicle> hiredVehicleListModel = new uon.vehiclehiresystem.models.ListModel<>(HiredVehicle.getHiredVehiclesList());
 
         frameStaffPortal.getPanelListView().setListModel(hiredVehicleListModel);
         frameStaffPortal.getPanelListView().setListType(HiredVehicle.TYPE_HIRED_VEHICLE);
@@ -350,7 +354,9 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
     private void setVehicleIsHired(HiredVehicle hiredVehicle, boolean value){
 
         Vehicle vehicle = Vehicle.getVehicleWithRegNo(hiredVehicle.getVehicleRegNo());
-        vehicle.delete();
+        if (vehicle != null) {
+            vehicle.delete();
+        }
         vehicle.setHired(value);
         try {
             if (vehicle.getType() == Vehicle.TYPE_CAR) ((Car) vehicle).create();
@@ -409,6 +415,10 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
 
     private void queryUser(){
         String username = JOptionPane.showInputDialog(frameStaffPortal, "Input Username:");
+
+        // If user cancels, null is returned from input dialog.
+        if(username == null) return;
+
         User user = Customer.getUserWithUsername(username);
 
         // check in staff list if not found in customer
@@ -422,6 +432,28 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
         new UserDetailsController(new FrameUserDetail(), user);
     }
 
+    private void queryVehicle(){
+        String regNumber = JOptionPane.showInputDialog(frameStaffPortal, "Input Vehicle Reg. No:");
+
+        // If user cancels, null is returned from input dialog.
+        if(regNumber == null) return;
+
+        if(!Validator.validateIsNumber(regNumber)){
+            Messages.showErrorMessage("Reg. No must be a number!", frameStaffPortal);
+            return;
+        }
+
+        Vehicle vehicle = Vehicle.getVehicleWithRegNo(Integer.parseInt(regNumber));
+
+        // Check if vehicle exists
+        if(vehicle == null){
+            Messages.showErrorMessage("No vehicle found with Reg. No: " + regNumber, frameStaffPortal);
+            return;
+        }
+
+        new VehicleDetailsController(new FrameVehicleDetail(), vehicle);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -429,7 +461,6 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
         if(source == frameStaffPortal.getBtnMenuVehicles()){
             setSelectedMainMenuItem(BUTTON_ACTION_VEHICLES);
             loadVehicles();
-
         }else if(source == frameStaffPortal.getBtnMenuUsers()){
             setSelectedMainMenuItem(BUTTON_ACTION_USERS);
             loadUsers();
@@ -465,6 +496,8 @@ public class StaffPortalController implements ActionListener, ListSelectionListe
             frameStaffPortal.dispose();
         }else if(source == frameStaffPortal.getMenuQueryUser()){
             queryUser();
+        }else if(source == frameStaffPortal.getMenuQueryVehicle()){
+            queryVehicle();
         }
     }
 

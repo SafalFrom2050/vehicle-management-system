@@ -3,6 +3,7 @@ package uon.vehiclehiresystem.controllers;
 import uon.vehiclehiresystem.models.ListModel;
 import uon.vehiclehiresystem.views.FrameUserDetail;
 import uon.vehiclehiresystem.models.*;
+import uon.vehiclehiresystem.views.PanelDescriptionBox;
 import uon.vehiclehiresystem.views.miscellaneous.Messages;
 
 import javax.swing.*;
@@ -55,8 +56,42 @@ public class UserDetailsController implements ListSelectionListener, ActionListe
         frameUserDetail.getPanelListView().getBtnDisapprove().addActionListener(this);
         frameUserDetail.getPanelListView().getBtnSetExpired().addActionListener(this);
         frameUserDetail.getPanelListView().getListView().addListSelectionListener(this);
+
+        frameUserDetail.getPanelDescriptionBox().getBtnEdit().addActionListener(this);
     }
 
+    private void editUser() throws FileNotFoundException{
+        PanelDescriptionBox descBox = frameUserDetail.getPanelDescriptionBox();
+
+        String username = descBox.getTxtUsername().getText();
+        String name = descBox.getTxtName().getText();
+        String password = descBox.getTxtPassword().getText();
+
+        if(descBox.getType() == User.TYPE_STAFF){
+            int staffID = Integer.parseInt(descBox.getTxtStaffID().getText());
+
+            Staff staff = new Staff(staffID, name, username, password);
+
+            // Edit operation requires deletion and recreation
+            staff.delete();
+            staff.create();
+        }else if(descBox.getType() == User.TYPE_CUSTOMER){
+            int customerID = Integer.parseInt(descBox.getTxtCustomerID().getText());
+            String phoneNumber = descBox.getTxtPhoneNumber().getText();
+            String email = descBox.getTxtEmail().getText();
+            String address = descBox.getTxtAddress().getText();
+
+            Customer customer = new Customer(customerID, name, username, password, phoneNumber, address, email);
+
+            // Edit operation requires deletion and recreation
+            customer.delete();
+            customer.create();
+        }else{
+            return;
+        }
+
+        Messages.showMessage("User Details Changed!", frameUserDetail);
+    }
 
     private void setHireRequestStatus(int status) {
         if(selectedHiredVehicle == null){
@@ -89,8 +124,11 @@ public class UserDetailsController implements ListSelectionListener, ActionListe
     private void setVehicleIsHired(HiredVehicle hiredVehicle, boolean value){
 
         Vehicle vehicle = Vehicle.getVehicleWithRegNo(hiredVehicle.getVehicleRegNo());
-        vehicle.delete();
-        vehicle.setHired(value);
+        if (vehicle != null) {
+            vehicle.delete();
+            vehicle.setHired(value);
+        }
+
         try {
             if (vehicle.getType() == Vehicle.TYPE_CAR) ((Car) vehicle).create();
             if (vehicle.getType() == Vehicle.TYPE_LORRY) ((Lorry) vehicle).create();
@@ -111,6 +149,12 @@ public class UserDetailsController implements ListSelectionListener, ActionListe
             setHireRequestStatus(HiredVehicle.STATUS_DISAPPROVED);
         }else if(source == frameUserDetail.getPanelListView().getBtnSetExpired()){
             setHireRequestStatus(HiredVehicle.STATUS_EXPIRED);
+        }else if(source == frameUserDetail.getPanelDescriptionBox().getBtnEdit()){
+            try {
+                editUser();
+            } catch (FileNotFoundException ex) {
+                Messages.showErrorMessage("User details cannot be edited!", frameUserDetail);
+            }
         }
     }
 
