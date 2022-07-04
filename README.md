@@ -1,6 +1,6 @@
 # Vehicle Management System
 
-MVC application built using Java Swing framework.
+Vehicle hiring system built using Java Swing framework.
 
 ### Feature Highlights:
 - MVC pattern
