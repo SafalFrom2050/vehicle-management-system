@@ -9,8 +9,15 @@ MVC application built using Java Swing framework.
 - Includes unit testing
 
 ### Screenshots
+#### Customer Dashboard
+![jAh9AF.png](https://iili.io/jAh9AF.png)
+
+#### Staff Dashboard
+![jAhHwg.png](https://iili.io/jAhHwg.png)
+
+#### UML Diagrams
 ![jAX499.png](https://iili.io/jAX499.png)
 ![jAX6ue.png](https://iili.io/jAX6ue.png)
-![jAh9AF.png](https://iili.io/jAh9AF.png)
-![jAhHwg.png](https://iili.io/jAhHwg.png)
+
+#### Unit Testing Results
 ![jAhJta.png](https://iili.io/jAhJta.png)
